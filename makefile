@@ -30,7 +30,8 @@ $(PATH_EXEC): $(PATH_OBJ)
 	$(CC) $(FLAG_INCLUDE) $^ -o $@
 
 
-$(PATH_OBJ): $(DIR_BUILD)/%.o: $(DIR_SRC)/%.c $(MAKEFILE_LIST)
+#$(PATH_OBJ): $(DIR_BUILD)/%.o: $(DIR_SRC)/%.c $(MAKEFILE_LIST)
+$(PATH_OBJ): $(DIR_BUILD)/%.o: $(DIR_SRC)/%.c
 	$(CC) $(FLAG_INCLUDE) $(FLAG_WARN) $(FLAG_MISC) $(CFLAGS) -c $< -o $@
 
 
@@ -61,3 +62,12 @@ run:
 clean:
 	rm -rIv $(PATH_OBJ) $(PATH_DEP)
 
+
+NDEBUG := \s*\#define\s\+NDEBUG\s*
+.PHONY: is_not_debug
+is_not_debug:
+	sed -i 's;^\/\/\($(NDEBUG)\)$$;\1;' $(DIR_SRC)/*.c
+
+.PHONY: is_debug
+is_debug:
+	sed -i 's;^\($(NDEBUG)\)$$;\/\/\1;' $(DIR_SRC)/*.c
