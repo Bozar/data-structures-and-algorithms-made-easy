@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#include ".h"
-
-//#define
+#include "linked_list.h"
 
 
 int
 main(void) {
-	printf("hello world\n");
-	return 0;
+	if (llt_test()) {
+		exit(EXIT_SUCCESS);
+	}
+	exit(EXIT_FAILURE);
 }

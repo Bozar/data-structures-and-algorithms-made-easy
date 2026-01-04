@@ -1,4 +1,4 @@
-FILE_OBJ = main.o
+FILE_OBJ = main.o linked_list.o
 FILE_SRC = $(subst .o,.c,$(FILE_OBJ))
 FILE_DEP = $(subst .o,.d,$(FILE_OBJ))
 
@@ -67,7 +67,9 @@ NDEBUG := \s*\#define\s\+NDEBUG\s*
 .PHONY: is_not_debug
 is_not_debug:
 	sed -i 's;^\/\/\($(NDEBUG)\)$$;\1;' $(DIR_SRC)/*.c
+	sed -i 's;^\/\/\($(NDEBUG)\)$$;\1;' $(DIR_INCLUDE)/*.h
 
 .PHONY: is_debug
 is_debug:
 	sed -i 's;^\($(NDEBUG)\)$$;\/\/\1;' $(DIR_SRC)/*.c
+	sed -i 's;^\($(NDEBUG)\)$$;\/\/\1;' $(DIR_INCLUDE)/*.h
