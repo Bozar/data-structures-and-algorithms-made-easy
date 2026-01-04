@@ -21,7 +21,7 @@ struct llt_snode {
 };
 
 bool llt_snew(struct llt_snode ** node);
-void llt_sprint(const struct llt_snode * node);
+void llt_sprint(struct llt_snode * node);
 
 
 #endif // LINKED_LIST_H
