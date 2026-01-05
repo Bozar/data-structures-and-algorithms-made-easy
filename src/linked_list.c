@@ -11,7 +11,7 @@
 
 // DEBUG {{{1
 
-#ifndef NDEBUG
+#if ! defined(NDEBUG)
 
 static bool zz_llt_snew(void);
 static bool zz_llt_sprint(void);
@@ -61,8 +61,8 @@ zz_slist(struct llt_snode ** head) {
 		}
 		nodes[i]->data = i + 42;
 	}
-	for (int i = 0; i < MAX_NODE - 1; i++) {
-		nodes[i]->next = nodes[i + 1];
+	for (int i = 0; i < MAX_NODE-1; i++) {
+		nodes[i]->next = nodes[i+1];
 	}
 	*head = nodes[0];
 	return is_ok;
@@ -78,7 +78,7 @@ FREE:
 }
 
 #endif // NDEBUG
-// PUBLIC {{{1
+// SNODE {{{1
 
 bool
 llt_snew(struct llt_snode ** node) {
