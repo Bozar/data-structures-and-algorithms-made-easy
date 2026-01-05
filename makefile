@@ -66,10 +66,10 @@ clean:
 NDEBUG := \s*\#define\s\+NDEBUG\s*
 .PHONY: is_not_debug
 is_not_debug:
-	sed -i 's;^\/\/\($(NDEBUG)\)$$;\1;' $(DIR_SRC)/*.c
-	sed -i 's;^\/\/\($(NDEBUG)\)$$;\1;' $(DIR_INCLUDE)/*.h
+	sed -i 's;^\/\/\($(NDEBUG)\);\1;' $(DIR_SRC)/*.c
+	sed -i 's;^\/\/\($(NDEBUG)\);\1;' $(DIR_INCLUDE)/*.h
 
 .PHONY: is_debug
 is_debug:
-	sed -i 's;^\($(NDEBUG)\)$$;\/\/\1;' $(DIR_SRC)/*.c
-	sed -i 's;^\($(NDEBUG)\)$$;\/\/\1;' $(DIR_INCLUDE)/*.h
+	sed -i 's;^\($(NDEBUG)\);\/\/\1;' $(DIR_SRC)/*.c
+	sed -i 's;^\($(NDEBUG)\);\/\/\1;' $(DIR_INCLUDE)/*.h
