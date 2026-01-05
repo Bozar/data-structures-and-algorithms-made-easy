@@ -10,7 +10,7 @@
 
 // DEBUG {{{1
 
-#if defined(DEBUG_LLT)
+#if DEBUG_LLT
 
 bool llt_test(void);
 

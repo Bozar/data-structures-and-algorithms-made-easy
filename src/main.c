@@ -7,7 +7,7 @@
 
 int
 main(void) {
-#if defined(DEBUG_LLT)
+#if DEBUG_LLT
 	if (llt_test()) {
 		exit(EXIT_SUCCESS);
 	}

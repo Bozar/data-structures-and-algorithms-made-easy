@@ -9,7 +9,7 @@
 
 // DEBUG {{{1
 
-#if defined(DEBUG_LLT)
+#if DEBUG_LLT
 
 static bool zz_llt_snew(void);
 static bool zz_llt_sprint(void);
@@ -129,11 +129,11 @@ bool
 llt_sfree(struct llt_snode ** node) {
 	struct llt_snode * head = *node;
 	struct llt_snode * child = NULL;
-#if defined(DEBUG_LLT)
+#if DEBUG_LLT
 	int i = 0;
 #endif
 	while (head) {
-#if defined(DEBUG_LLT)
+#if DEBUG_LLT
 		printf("Del %d: %d\n", i, head->data);
 		i++;
 #endif

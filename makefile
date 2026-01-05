@@ -75,7 +75,7 @@ is_debug:
 	sed -i 's;^\($(NDEBUG)\);\/\/\1;' $(PATH_DEBUG)
 
 
-DEF_DEBUG := $#\(define\|undef\) \(NDEBUG\|DEBUG_\)
+DEF_DEBUG := \#\(define\|undef\) \(NDEBUG\|DEBUG_\)
 .PHONY: print_debug_tag
 print_debug_tag:
 	grep -n -e '$(DEF_DEBUG)' $(DIR_INCLUDE)/$(FILE_DEBUG) | \

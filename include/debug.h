@@ -9,13 +9,9 @@
 
 // DEBUG_TAG {{{1
 
-#if defined(NDEBUG) // UNDEF_TAG {{{2
+#if ! defined(NDEBUG)
 
-#undef DEBUG_LLT
-
-#else // DEFINE_TAG {{{2
-
-#define DEBUG_LLT
+#define DEBUG_LLT 1
 
 #endif
 
