@@ -3,18 +3,18 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
-//#define NDEBUG
-//#include <assert.h>
 
 #include <stdbool.h>
 
+#include "debug.h"
+
 // DEBUG {{{1
 
-#if ! defined(NDEBUG)
+#if defined(DEBUG_LLT)
 
 bool llt_test(void);
 
-#endif // NDEBUG
+#endif
 
 // SNODE {{{1
 
@@ -29,4 +29,4 @@ bool llt_sfree(struct llt_snode ** node);
 
 // EOF {{{1
 
-#endif // LINKED_LIST_H
+#endif

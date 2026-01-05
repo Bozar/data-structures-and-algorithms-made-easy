@@ -2,19 +2,17 @@
 #include <stdlib.h>
 
 #include "linked_list.h"
-
-
-//#define NDEBUG
+#include "debug.h"
 
 
 int
 main(void) {
-#if ! defined(NDEBUG)
+#if defined(DEBUG_LLT)
 	if (llt_test()) {
 		exit(EXIT_SUCCESS);
 	}
 	exit(EXIT_FAILURE);
-#endif // NDEBUG
+#endif
 
 	printf("Is not debug\n");
 	exit(EXIT_SUCCESS);

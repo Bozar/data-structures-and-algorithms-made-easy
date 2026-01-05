@@ -9,6 +9,7 @@ FILE_EXEC := prog
 FILE_MAIN := main.c
 FILE_GIT_KEEP := .gitkeep
 FILE_GIT_IGNORE := .gitignore
+FILE_DEBUG := debug.h
 
 DIR_BUILD := ./build
 DIR_INCLUDE := ./include
@@ -17,6 +18,7 @@ DIR_SRC := ./src
 PATH_OBJ := $(addprefix $(DIR_BUILD)/,$(FILE_OBJ))
 PATH_DEP := $(addprefix $(DIR_BUILD)/,$(FILE_DEP))
 PATH_EXEC := $(addprefix $(DIR_BUILD)/,$(FILE_EXEC))
+PATH_DEBUG := $(addprefix $(DIR_INCLUDE)/,$(FILE_DEBUG))
 
 FLAG_INCLUDE := -I$(DIR_INCLUDE)
 FLAG_WARN := -ansi -pedantic -std=c99 -Wall -Wextra \
@@ -66,10 +68,15 @@ clean:
 NDEBUG := \s*\#define\s\+NDEBUG\s*
 .PHONY: is_not_debug
 is_not_debug:
-	sed -i 's;^\/\/\($(NDEBUG)\);\1;' $(DIR_SRC)/*.c
-	sed -i 's;^\/\/\($(NDEBUG)\);\1;' $(DIR_INCLUDE)/*.h
+	sed -i 's;^\/\/\($(NDEBUG)\);\1;' $(PATH_DEBUG)
 
 .PHONY: is_debug
 is_debug:
-	sed -i 's;^\($(NDEBUG)\);\/\/\1;' $(DIR_SRC)/*.c
-	sed -i 's;^\($(NDEBUG)\);\/\/\1;' $(DIR_INCLUDE)/*.h
+	sed -i 's;^\($(NDEBUG)\);\/\/\1;' $(PATH_DEBUG)
+
+
+DEF_DEBUG := $#\(define\|undef\) \(NDEBUG\|DEBUG_\)
+.PHONY: print_debug_tag
+print_debug_tag:
+	grep -n -e '$(DEF_DEBUG)' $(DIR_INCLUDE)/$(FILE_DEBUG) | \
+			sed 's;:\|\s;\t;g'

@@ -4,14 +4,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//#define NDEBUG
-//#include <assert.h>
-
 #include "linked_list.h"
+#include "debug.h"
 
 // DEBUG {{{1
 
-#if ! defined(NDEBUG)
+#if defined(DEBUG_LLT)
 
 static bool zz_llt_snew(void);
 static bool zz_llt_sprint(void);
@@ -100,7 +98,8 @@ zz_llt_sfree(void) {
 	return is_ok;
 }
 
-#endif // NDEBUG
+#endif
+
 // SNODE {{{1
 
 bool
@@ -130,14 +129,14 @@ bool
 llt_sfree(struct llt_snode ** node) {
 	struct llt_snode * head = *node;
 	struct llt_snode * child = NULL;
-#if ! defined(NDEBUG)
+#if defined(DEBUG_LLT)
 	int i = 0;
-#endif // NDEBUG
+#endif
 	while (head) {
-#if ! defined(NDEBUG)
+#if defined(DEBUG_LLT)
 		printf("Del %d: %d\n", i, head->data);
 		i++;
-#endif // NDEBUG
+#endif
 		child = head->next;
 		free(head);
 		head = child;
