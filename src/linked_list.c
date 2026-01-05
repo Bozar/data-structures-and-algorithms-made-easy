@@ -15,13 +15,15 @@
 
 static bool zz_llt_snew(void);
 static bool zz_llt_sprint(void);
+static bool zz_llt_sfree(void);
 
 static bool zz_slist(struct llt_snode ** head);
 
 
 bool
 llt_test(void) {
-	return zz_llt_sprint();
+	return zz_llt_sfree();
+	//return zz_llt_sprint();
 	//return zz_llt_snew();
 }
 
@@ -77,6 +79,27 @@ FREE:
 	return is_ok;
 }
 
+
+static bool
+zz_llt_sfree(void) {
+	struct llt_snode * node = NULL;
+	bool is_ok = false;
+	if (! zz_slist(&node)) {
+		return is_ok;
+	}
+	llt_sprint(node);
+
+	printf("\n");
+	if (! llt_sfree(&node)) {
+		fprintf(stderr, "Failed: llt_sfree()");
+	} else if (node != NULL) {
+		fprintf(stderr, "Node is NOT NULL");
+	} else {
+		is_ok = true;
+	}
+	return is_ok;
+}
+
 #endif // NDEBUG
 // SNODE {{{1
 
@@ -96,9 +119,29 @@ llt_snew(struct llt_snode ** node) {
 void
 llt_sprint(struct llt_snode * node) {
 	struct llt_snode * this = node;
-	for (int i = 0; this; ) {
+	for (int i = 0; this; i++) {
 		printf("%d: %d\n", i, this->data);
 		this = this->next;
-		i += 1;
 	}
+}
+
+
+bool
+llt_sfree(struct llt_snode ** node) {
+	struct llt_snode * head = *node;
+	struct llt_snode * child = NULL;
+#if ! defined(NDEBUG)
+	int i = 0;
+#endif // NDEBUG
+	while (head) {
+#if ! defined(NDEBUG)
+		printf("Del %d: %d\n", i, head->data);
+		i++;
+#endif // NDEBUG
+		child = head->next;
+		free(head);
+		head = child;
+	}
+	*node = NULL;
+	return true;
 }

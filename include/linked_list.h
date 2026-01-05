@@ -25,6 +25,7 @@ struct llt_snode {
 
 bool llt_snew(struct llt_snode ** node);
 void llt_sprint(struct llt_snode * node);
+bool llt_sfree(struct llt_snode ** node);
 
 // EOF {{{1
 
