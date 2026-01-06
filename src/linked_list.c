@@ -96,9 +96,9 @@ zz_llt_sfree(void) {
 
 	printf("\n");
 	if (! llt_sfree(&node)) {
-		fprintf(stderr, "Failed: llt_sfree()");
+		fprintf(stderr, "Failed: llt_sfree().\n");
 	} else if (node != NULL) {
-		fprintf(stderr, "Node is NOT NULL");
+		fprintf(stderr, "Node is NOT NULL.\n");
 	} else {
 		is_ok = true;
 	}
@@ -122,6 +122,7 @@ zz_llt_sinsert(void) {
 	if (llt_sinsert(&head, ERR, ERR)) {
 		assert(false);
 	}
+	printf("\n");
 
 	// Insert head.
 	const int DT0 = 3, ID0 = 0;
@@ -130,20 +131,23 @@ zz_llt_sinsert(void) {
 		goto CLEAN_UP;
 	}
 	this = head;
-	assert(this->data == DT0);
+	printf("Insert: %d-%d\n", ID0, DT0);
 	llt_sprint(head);
+	assert(this->data == DT0);
 	printf("\n");
 
 	// Insert tail (last index).
-	const int DT1 = 11, ID1 = MAX_NODE;
+	const int DT1 = 11, ID1 = MAX_NODE+1;
 	if (! llt_sinsert(&head, DT1, ID1)) {
 		goto CLEAN_UP;
 	}
+	this = head;
 	while (this->next) {
 		this = this->next;
 	}
-	assert(this->data == DT1);
+	printf("Insert: %d-%d\n", ID1, DT1);
 	llt_sprint(head);
+	assert(this->data == DT1);
 	printf("\n");
 
 	// Insert tail (overflow index).
@@ -151,11 +155,13 @@ zz_llt_sinsert(void) {
 	if (! llt_sinsert(&head, DT2, ID2)) {
 		goto CLEAN_UP;
 	}
+	this = head;
 	while (this->next) {
 		this = this->next;
 	}
-	assert(this->data == DT2);
+	printf("Insert: %d-%d\n", ID2, DT2);
 	llt_sprint(head);
+	assert(this->data == DT2);
 	printf("\n");
 
 	// Insert middle.
@@ -163,11 +169,13 @@ zz_llt_sinsert(void) {
 	if (! llt_sinsert(&head, DT3, ID3)) {
 		goto CLEAN_UP;
 	}
+	this = head;
 	for (int i = 0; i < ID3; i++) {
 		this = this->next;
 	}
-	assert(this->data == DT3);
+	printf("Insert: %d-%d\n", ID3, DT3);
 	llt_sprint(head);
+	assert(this->data == DT3);
 	printf("\n");
 
 	is_ok = true;
@@ -185,7 +193,7 @@ bool
 llt_snew(struct llt_snode ** head) {
 	*head = malloc(sizeof(struct llt_snode));
 	if (! *head) {
-		fprintf(stderr, "Memory error");
+		fprintf(stderr, "Memory error.\n");
 		return false;
 	}
 	(*head)->data = 0;
@@ -227,5 +235,37 @@ llt_sfree(struct llt_snode ** head) {
 
 bool
 llt_sinsert(struct llt_snode ** head, int data, int index) {
+	if (! *head) {
+		fprintf(stderr, "Head is NULL.\n");
+		return false;
+	} else if (index < 0) {
+		fprintf(stderr, "Index is negative.\n");
+		return false;
+	}
+
+	struct llt_snode * node = NULL;
+	if (! llt_snew(&node)) {
+		fprintf(stderr, "Memory error.\n");
+		free(node);
+		return false;
+	}
+
+	node->data = data;
+	if (index == 0) {
+		node->next = *head;
+		*head = node;
+		return true;
+	}
+
+	struct llt_snode * this = *head;
+	// New node occupies position `index`.
+	for (int i = 0; i < index-1; i++) {
+		if (! this->next) {
+			break;
+		}
+		this = this->next;
+	}
+	node->next = this->next;
+	this->next = node;
 	return true;
 }
