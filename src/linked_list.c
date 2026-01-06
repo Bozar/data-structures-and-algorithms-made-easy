@@ -6,21 +6,24 @@
 
 #include "linked_list.h"
 #include "debug.h"
-
 // DEBUG {{{1
 
 #if DEBUG_LLT
+NO_WARNING_BEGIN
+NO_WARNING(-Wunused-function)
 
 static bool zz_llt_snew(void);
 static bool zz_llt_sprint(void);
 static bool zz_llt_sfree(void);
+static bool zz_llt_sinsert(void);
 
 static bool zz_slist(struct llt_snode ** head);
 
 
 bool
 llt_test(void) {
-	return zz_llt_sfree();
+	return zz_llt_sinsert();
+	//return zz_llt_sfree();
 	//return zz_llt_sprint();
 	//return zz_llt_snew();
 }
@@ -98,26 +101,32 @@ zz_llt_sfree(void) {
 	return is_ok;
 }
 
-#endif
+static bool
+zz_llt_sinsert(void) {
+	printf("test sinsert\n");
+	return true;
+}
 
+NO_WARNING_END
+#endif
 // SNODE {{{1
 
 bool
-llt_snew(struct llt_snode ** node) {
-	*node = malloc(sizeof(struct llt_snode));
-	if (! *node) {
+llt_snew(struct llt_snode ** head) {
+	*head = malloc(sizeof(struct llt_snode));
+	if (! *head) {
 		fprintf(stderr, "Memory error");
 		return false;
 	}
-	(*node)->data = 0;
-	(*node)->next = NULL;
+	(*head)->data = 0;
+	(*head)->next = NULL;
 	return true;
 }
 
 
 void
-llt_sprint(struct llt_snode * node) {
-	struct llt_snode * this = node;
+llt_sprint(struct llt_snode * head) {
+	struct llt_snode * this = head;
 	for (int i = 0; this; i++) {
 		printf("%d: %d\n", i, this->data);
 		this = this->next;
@@ -126,21 +135,27 @@ llt_sprint(struct llt_snode * node) {
 
 
 bool
-llt_sfree(struct llt_snode ** node) {
-	struct llt_snode * head = *node;
+llt_sfree(struct llt_snode ** head) {
+	struct llt_snode * this = *head;
 	struct llt_snode * child = NULL;
 #if DEBUG_LLT
 	int i = 0;
 #endif
-	while (head) {
+	while (this) {
 #if DEBUG_LLT
-		printf("Del %d: %d\n", i, head->data);
+		printf("Del %d: %d\n", i, this->data);
 		i++;
 #endif
-		child = head->next;
-		free(head);
-		head = child;
+		child = this->next;
+		free(this);
+		this = child;
 	}
-	*node = NULL;
+	*head = NULL;
+	return true;
+}
+
+
+bool
+llt_sinsert(struct llt_snode ** head, int data, int index) {
 	return true;
 }
