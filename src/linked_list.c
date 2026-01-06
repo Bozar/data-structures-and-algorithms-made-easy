@@ -12,6 +12,11 @@
 NO_WARNING_BEGIN
 NO_WARNING(-Wunused-function)
 
+
+#define MAX_NODE 10
+#define FIRST_DATA 42
+
+
 static bool zz_llt_snew(void);
 static bool zz_llt_sprint(void);
 static bool zz_llt_sfree(void);
@@ -54,15 +59,14 @@ zz_llt_sprint(void) {
 
 static bool
 zz_slist(struct llt_snode ** head) {
-	const int MAX_NODE = 10;
 	struct llt_snode * nodes[MAX_NODE];
 	bool is_ok = true;
 	for (int i = 0; i < MAX_NODE; i++) {
 		if (! llt_snew(&nodes[i])) {
 			is_ok = false;
-			goto FREE;
+			goto CLEAN_UP;
 		}
-		nodes[i]->data = i + 42;
+		nodes[i]->data = i + FIRST_DATA;
 	}
 	for (int i = 0; i < MAX_NODE-1; i++) {
 		nodes[i]->next = nodes[i+1];
@@ -70,7 +74,7 @@ zz_slist(struct llt_snode ** head) {
 	*head = nodes[0];
 	return is_ok;
 
-FREE:
+CLEAN_UP:
 	for (int i = 0; i < MAX_NODE; i++) {
 		if (nodes[i]) {
 			free(nodes[i]);
@@ -101,11 +105,77 @@ zz_llt_sfree(void) {
 	return is_ok;
 }
 
+
 static bool
 zz_llt_sinsert(void) {
-	printf("test sinsert\n");
-	return true;
+	// Create a list.
+	struct llt_snode * head = NULL;
+	bool is_ok = false;
+	if (! zz_slist(&head)) {
+		goto CLEAN_UP;
+	}
+	llt_sprint(head);
+	printf("\n");
+
+	// Test a negative index.
+	const int ERR = -1;
+	if (llt_sinsert(&head, ERR, ERR)) {
+		assert(false);
+	}
+
+	// Insert head.
+	const int DT0 = 3, ID0 = 0;
+	struct llt_snode * this = NULL;
+	if (! llt_sinsert(&head, DT0, ID0)) {
+		goto CLEAN_UP;
+	}
+	this = head;
+	assert(this->data == DT0);
+	llt_sprint(head);
+	printf("\n");
+
+	// Insert tail (last index).
+	const int DT1 = 11, ID1 = MAX_NODE;
+	if (! llt_sinsert(&head, DT1, ID1)) {
+		goto CLEAN_UP;
+	}
+	while (this->next) {
+		this = this->next;
+	}
+	assert(this->data == DT1);
+	llt_sprint(head);
+	printf("\n");
+
+	// Insert tail (overflow index).
+	const int DT2 = 23, ID2 = MAX_NODE*2;
+	if (! llt_sinsert(&head, DT2, ID2)) {
+		goto CLEAN_UP;
+	}
+	while (this->next) {
+		this = this->next;
+	}
+	assert(this->data == DT2);
+	llt_sprint(head);
+	printf("\n");
+
+	// Insert middle.
+	const int DT3 = 7, ID3 = MAX_NODE/2;
+	if (! llt_sinsert(&head, DT3, ID3)) {
+		goto CLEAN_UP;
+	}
+	for (int i = 0; i < ID3; i++) {
+		this = this->next;
+	}
+	assert(this->data == DT3);
+	llt_sprint(head);
+	printf("\n");
+
+	is_ok = true;
+CLEAN_UP:
+	llt_sfree(&head);
+	return is_ok;
 }
+
 
 NO_WARNING_END
 #endif
