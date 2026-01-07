@@ -25,6 +25,7 @@ bool llt_snew(struct llt_snode ** node);
 void llt_sprint(struct llt_snode * head);
 bool llt_sfree(struct llt_snode ** head);
 bool llt_sinsert(struct llt_snode ** head, int data, int index);
+bool llt_sdelete(struct llt_snode ** head, int index);
 // EOF {{{1
 
 #endif

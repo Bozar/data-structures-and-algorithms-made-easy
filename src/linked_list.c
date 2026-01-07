@@ -7,31 +7,23 @@
 #include "linked_list.h"
 #include "debug.h"
 // DEBUG {{{1
+// MARCO {{{2
 
 #if DEBUG_LLT
 NO_WARNING_BEGIN
 NO_WARNING(-Wunused-function)
 
-
 #define MAX_NODE 10
 #define FIRST_DATA 42
-
+// ZZ_SLIST {{{2
 
 static bool zz_llt_snew(void);
 static bool zz_llt_sprint(void);
 static bool zz_llt_sfree(void);
 static bool zz_llt_sinsert(void);
+static bool zz_llt_sdelete(void);
 
 static bool zz_slist(struct llt_snode ** head);
-
-
-bool
-llt_test(void) {
-	return zz_llt_sinsert();
-	//return zz_llt_sfree();
-	//return zz_llt_sprint();
-	//return zz_llt_snew();
-}
 
 
 static bool
@@ -185,9 +177,116 @@ CLEAN_UP:
 }
 
 
+static bool
+zz_llt_sdelete(void) {
+	// Create a list.
+	struct llt_snode * head = NULL;
+	bool is_ok = false;
+	if (! zz_slist(&head)) {
+		goto CLEAN_UP;
+	}
+	llt_sprint(head);
+	printf("\n");
+
+	// Test a negative index.
+	const int ERR = -1;
+	if (llt_sdelete(&head, ERR)) {
+		assert(false);
+	}
+	printf("\n");
+
+	// Delete head.
+	const int ID0 = 0;
+	const int HEAD0 = 43;
+	const int TAIL0 = 51;
+	struct llt_snode * this = NULL;
+	if (! llt_sdelete(&head, ID0)) {
+		goto CLEAN_UP;
+	}
+	printf("Delete: %d\n", ID0);
+	llt_sprint(head);
+	this = head;
+	while (this->next) {
+		this = this->next;
+	}
+	assert(head->data == HEAD0);
+	assert(this->data == TAIL0);
+	printf("\n");
+
+	// Delete tail (last index).
+	const int ID1 = MAX_NODE-2;
+	const int HEAD1 = 43;
+	const int TAIL1 = 50;
+	if (! llt_sdelete(&head, ID1)) {
+		goto CLEAN_UP;
+	}
+	printf("Delete: %d\n", ID1);
+	llt_sprint(head);
+	this = head;
+	while (this->next) {
+		this = this->next;
+	}
+	assert(head->data == HEAD1);
+	assert(this->data == TAIL1);
+	printf("\n");
+
+	// Delete tail (overflow index).
+	const int ID2 = MAX_NODE*2;
+	const int HEAD2 = 43;
+	const int TAIL2 = 49;
+	if (! llt_sdelete(&head, ID2)) {
+		goto CLEAN_UP;
+	}
+	printf("Delete: %d\n", ID2);
+	llt_sprint(head);
+	this = head;
+	while (this->next) {
+		this = this->next;
+	}
+	assert(head->data == HEAD2);
+	assert(this->data == TAIL2);
+	printf("\n");
+
+	// Delete middle.
+	const int ID3 = 2;
+	const int HEAD3 = 43;
+	// Value of the new node at index 2.
+	const int TAIL3 = 46;
+	if (! llt_sdelete(&head, ID3)) {
+		goto CLEAN_UP;
+	}
+	printf("Delete: %d\n", ID3);
+	llt_sprint(head);
+	this = head;
+	for (int i = 0; i < ID3; i++) {
+		this = this->next;
+	}
+	assert(head->data == HEAD3);
+	assert(this->data == TAIL3);
+	printf("\n");
+
+	is_ok = true;
+CLEAN_UP:
+	llt_sfree(&head);
+	return is_ok;
+}
+// LLT_TEST {{{2
+
+bool
+llt_test(void) {
+	return zz_llt_sdelete();
+//	return zz_llt_sinsert();
+//	return zz_llt_sfree();
+//	return zz_llt_sprint();
+//	return zz_llt_snew();
+
+//	return true;
+}
+
+
 NO_WARNING_END
 #endif
-// SNODE {{{1
+// SLIST {{{1
 
 bool
 llt_snew(struct llt_snode ** head) {
@@ -267,5 +366,37 @@ llt_sinsert(struct llt_snode ** head, int data, int index) {
 	}
 	node->next = this->next;
 	this->next = node;
+	return true;
+}
+
+
+bool
+llt_sdelete(struct llt_snode ** head, int index) {
+	if (! *head) {
+		fprintf(stderr, "Head is NULL.\n");
+		return false;
+	} else if (index < 0) {
+		fprintf(stderr, "Index is negative.\n");
+		return false;
+	}
+
+	struct llt_snode * fast = *head;
+	if (index == 0) {
+		*head = (*head)->next;
+		free(fast);
+		return true;
+	}
+
+	struct llt_snode * slow = *head;
+	fast = (*head)->next;
+	for (int i = 0; i < index-1; i++) {
+		if (! fast->next) {
+			break;
+		}
+		fast = fast->next;
+		slow = slow->next;
+	}
+	slow->next = fast->next;
+	free(fast);
 	return true;
 }

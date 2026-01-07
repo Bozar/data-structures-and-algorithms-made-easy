@@ -79,4 +79,4 @@ DEF_DEBUG := \#\(define\|undef\) \(NDEBUG\|DEBUG_\)
 .PHONY: print_debug_tag
 print_debug_tag:
 	grep -n -e '$(DEF_DEBUG)' $(DIR_INCLUDE)/$(FILE_DEBUG) | \
-			sed 's;:\|\s;\t;g'
+			sed 's;:;\t;' | sed 's;\s;\t;g'
