@@ -28,4 +28,4 @@ bool llt_sinsert(struct llt_snode ** head, int data, int index);
 bool llt_sdelete(struct llt_snode ** head, int index);
 // EOF {{{1
 
-#endif
+#endif // LINKED_LIST_H

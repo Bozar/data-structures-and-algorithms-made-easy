@@ -88,9 +88,9 @@ zz_llt_sfree(void) {
 
 	printf("\n");
 	if (! llt_sfree(&node)) {
-		fprintf(stderr, "Failed: llt_sfree().\n");
+		PRINT_ERROR("Failed: llt_sfree().");
 	} else if (node != NULL) {
-		fprintf(stderr, "Node is NOT NULL.\n");
+		PRINT_ERROR("Node is NOT NULL.");
 	} else {
 		is_ok = true;
 	}
@@ -285,14 +285,14 @@ llt_test(void) {
 
 
 NO_WARNING_END
-#endif
+#endif // DEBUG_LLT
 // SLIST {{{1
 
 bool
 llt_snew(struct llt_snode ** head) {
 	*head = malloc(sizeof(struct llt_snode));
 	if (! *head) {
-		fprintf(stderr, "Memory error.\n");
+		PRINT_ERROR("Memory error.");
 		return false;
 	}
 	(*head)->data = 0;
@@ -335,16 +335,16 @@ llt_sfree(struct llt_snode ** head) {
 bool
 llt_sinsert(struct llt_snode ** head, int data, int index) {
 	if (! *head) {
-		fprintf(stderr, "Head is NULL.\n");
+		PRINT_ERROR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
-		fprintf(stderr, "Index is negative.\n");
+		PRINT_ERROR("Index is negative.");
 		return false;
 	}
 
 	struct llt_snode * node = NULL;
 	if (! llt_snew(&node)) {
-		fprintf(stderr, "Memory error.\n");
+		PRINT_ERROR("Memory error.");
 		free(node);
 		return false;
 	}
@@ -373,10 +373,10 @@ llt_sinsert(struct llt_snode ** head, int data, int index) {
 bool
 llt_sdelete(struct llt_snode ** head, int index) {
 	if (! *head) {
-		fprintf(stderr, "Head is NULL.\n");
+		PRINT_ERROR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
-		fprintf(stderr, "Index is negative.\n");
+		PRINT_ERROR("Index is negative.");
 		return false;
 	}
 

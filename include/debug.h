@@ -6,13 +6,20 @@
 
 //#define NDEBUG
 #include <assert.h>
-// DEBUG_TAG {{{1
+// DEBUG_MACRO {{{1
 
 #if ! defined(NDEBUG)
 
 #define DEBUG_LLT 1
 
 #endif
+
+
+#define PRINT_ERROR(...) do { \
+	fprintf(stderr, "%s: %d: ", __FILE__, __LINE__); \
+	fprintf(stderr, __VA_ARGS__); \
+	fprintf(stderr, "\n"); \
+} while(0)
 // PRAGMA_GCC {{{1
 
 // https://www.fluentcpp.com/2019/08/30/how-to-disable-a-warning-in-cpp/
@@ -27,4 +34,4 @@
 		DO_PRAGMA(GCC diagnostic ignored #warn)
 // EOF {{{1
 
-#endif
+#endif // DEBUG_H
