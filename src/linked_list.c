@@ -270,15 +270,61 @@ CLEAN_UP:
 	llt_sfree(&head);
 	return is_ok;
 }
+// ZZ_DLIST {{{2
+
+static bool zz_llt_dprint(void);
+
+static bool zz_dlist(struct llt_dnode ** head);
+
+
+static bool
+zz_llt_dprint(void) {
+	struct llt_dnode * node = NULL;
+	if (! zz_dlist(&node)) {
+		return false;
+	}
+	llt_dprint(node);
+	printf("\n");
+	llt_dfree(&node);
+	return true;
+}
+
+
+static bool
+zz_dlist(struct llt_dnode ** head) {
+	struct llt_dnode * nodes[MAX_NODE];
+	bool is_ok = true;
+	for (int i = 0; i < MAX_NODE; i++) {
+		if (! llt_dnew(&nodes[i])) {
+			is_ok = false;
+			goto CLEAN_UP;
+		}
+		nodes[i]->data = i + FIRST_DATA;
+	}
+	for (int i = 0; i < MAX_NODE-1; i++) {
+		nodes[i]->next = nodes[i+1];
+		if (i > 0) {
+		nodes[i]->prev = nodes[i-1];
+		}
+	}
+	nodes[MAX_NODE-1]->prev = nodes[MAX_NODE-2];
+	*head = nodes[0];
+	return is_ok;
+
+CLEAN_UP:
+	for (int i = 0; i < MAX_NODE; i++) {
+		if (nodes[i]) {
+			free(nodes[i]);
+		}
+	}
+	*head = NULL;
+	return is_ok;
+}
 // LLT_TEST {{{2
 
 bool
 llt_test(void) {
-	return zz_llt_sdelete();
-//	return zz_llt_sinsert();
-//	return zz_llt_sfree();
-//	return zz_llt_sprint();
-//	return zz_llt_snew();
+	return zz_llt_dprint();
 
 //	return true;
 }
@@ -398,5 +444,55 @@ llt_sdelete(struct llt_snode ** head, int index) {
 	}
 	slow->next = fast->next;
 	free(fast);
+	return true;
+}
+// DLIST {{{1
+
+bool
+llt_dnew(struct llt_dnode ** head) {
+	*head = malloc(sizeof(struct llt_dnode));
+	if (! *head) {
+		PRINT_ERROR("Memory error.");
+		return false;
+	}
+	(*head)->data = 0;
+	(*head)->next = NULL;
+	(*head)->prev = NULL;
+	return true;
+}
+
+
+void
+llt_dprint(struct llt_dnode * head) {
+	struct llt_dnode * this = head;
+	for (int i = 0; this; i++) {
+		printf("%d: %d, ", i, this->data);
+		if (this->prev) {
+			printf("<- %d\n", (this->prev)->data);
+		} else {
+			printf("<- NULL\n");
+		}
+		this = this->next;
+	}
+}
+
+
+bool
+llt_dfree(struct llt_dnode ** head) {
+	struct llt_dnode * this = *head;
+	struct llt_dnode * child = NULL;
+#if DEBUG_LLT
+	int i = 0;
+#endif
+	while (this) {
+#if DEBUG_LLT
+		printf("Del %d: %d\n", i, this->data);
+		i++;
+#endif
+		child = this->next;
+		free(this);
+		this = child;
+	}
+	*head = NULL;
 	return true;
 }
