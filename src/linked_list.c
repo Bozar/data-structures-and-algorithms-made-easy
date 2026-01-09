@@ -273,6 +273,7 @@ CLEAN_UP:
 // ZZ_DLIST {{{2
 
 static bool zz_llt_dprint(void);
+static bool zz_llt_dinsert(void);
 
 static bool zz_dlist(struct llt_dnode ** head);
 
@@ -320,11 +321,100 @@ CLEAN_UP:
 	*head = NULL;
 	return is_ok;
 }
+
+
+static bool
+zz_llt_dinsert(void) {
+	// Create a list.
+	struct llt_dnode * head = NULL;
+	bool is_ok = false;
+	if (! zz_dlist(&head)) {
+		goto CLEAN_UP;
+	}
+	llt_dprint(head);
+	printf("\n");
+
+	// Test a negative index.
+	const int ERR = -1;
+	if (llt_dinsert(&head, ERR, ERR)) {
+		assert(false);
+	}
+	printf("\n");
+
+	// Insert head.
+	const int DT0 = 3, ID0 = 0;
+	struct llt_dnode * this = NULL;
+	if (! llt_dinsert(&head, DT0, ID0)) {
+		goto CLEAN_UP;
+	}
+	this = head;
+	printf("Insert: %d-%d\n", ID0, DT0);
+	llt_dprint(head);
+	assert(this->data == DT0);
+	assert((this->next)->prev);
+	assert(((this->next)->prev) == this);
+	printf("\n");
+
+	// Insert tail (last index).
+	const int DT1 = 11, ID1 = MAX_NODE+1;
+	if (! llt_dinsert(&head, DT1, ID1)) {
+		goto CLEAN_UP;
+	}
+	this = head;
+	while (this->next) {
+		this = this->next;
+	}
+	printf("Insert: %d-%d\n", ID1, DT1);
+	llt_dprint(head);
+	assert(this->data == DT1);
+	assert(this->prev);
+	assert((this->prev)->next == this);
+	printf("\n");
+
+	// Insert tail (overflow index).
+	const int DT2 = 23, ID2 = MAX_NODE*2;
+	if (! llt_dinsert(&head, DT2, ID2)) {
+		goto CLEAN_UP;
+	}
+	this = head;
+	while (this->next) {
+		this = this->next;
+	}
+	printf("Insert: %d-%d\n", ID2, DT2);
+	llt_dprint(head);
+	assert(this->data == DT2);
+	assert(this->prev);
+	assert((this->prev)->next == this);
+	printf("\n");
+
+	// Insert middle.
+	const int DT3 = 7, ID3 = MAX_NODE/2;
+	if (! llt_dinsert(&head, DT3, ID3)) {
+		goto CLEAN_UP;
+	}
+	this = head;
+	for (int i = 0; i < ID3; i++) {
+		this = this->next;
+	}
+	printf("Insert: %d-%d\n", ID3, DT3);
+	llt_dprint(head);
+	assert(this->data == DT3);
+	assert(this->prev);
+	assert((this->prev)->next == this);
+	assert(this->next);
+	assert(((this->next)->prev) == this);
+	printf("\n");
+
+	is_ok = true;
+CLEAN_UP:
+	llt_dfree(&head);
+	return is_ok;
+}
 // LLT_TEST {{{2
 
 bool
 llt_test(void) {
-	return zz_llt_dprint();
+	return zz_llt_dinsert();
 
 //	return true;
 }
@@ -494,5 +584,48 @@ llt_dfree(struct llt_dnode ** head) {
 		this = child;
 	}
 	*head = NULL;
+	return true;
+}
+
+
+bool
+llt_dinsert(struct llt_dnode ** head, int data, int index) {
+	if (! *head) {
+		PRINT_ERROR("Head is NULL.");
+		return false;
+	} else if (index < 0) {
+		PRINT_ERROR("Index is negative.");
+		return false;
+	}
+
+	struct llt_dnode * node = NULL;
+	if (! llt_dnew(&node)) {
+		PRINT_ERROR("Memory error.");
+		free(node);
+		return false;
+	}
+
+	node->data = data;
+	if (index == 0) {
+		node->next = *head;
+		(*head)->prev = node;
+		*head = node;
+		return true;
+	}
+
+	struct llt_dnode * this = *head;
+	// New node occupies position `index`.
+	for (int i = 0; i < index-1; i++) {
+		if (! this->next) {
+			break;
+		}
+		this = this->next;
+	}
+	node->next = this->next;
+	if (this->next) {
+		(this->next)->prev = node;
+	}
+	this->next = node;
+	node->prev = this;
 	return true;
 }
