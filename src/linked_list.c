@@ -517,11 +517,60 @@ CLEAN_UP:
 	llt_dfree(&head);
 	return is_ok;
 }
+// ZZ_CLIST {{{2
+
+static bool zz_llt_cprint(void);
+//static bool zz_llt_cinsert(void);
+//static bool zz_llt_cdelete(void);
+
+static bool zz_clist(struct llt_cnode ** head);
+
+
+static bool
+zz_llt_cprint(void) {
+	struct llt_cnode * node = NULL;
+	if (! zz_clist(&node)) {
+		return false;
+	}
+	llt_cprint(node);
+	printf("\n");
+	llt_cfree(&node);
+	return true;
+}
+
+
+static bool
+zz_clist(struct llt_cnode ** head) {
+	struct llt_cnode * nodes[MAX_NODE];
+	bool is_ok = true;
+	for (int i = 0; i < MAX_NODE; i++) {
+		if (! llt_cnew(&nodes[i])) {
+			is_ok = false;
+			goto CLEAN_UP;
+		}
+		nodes[i]->data = i + FIRST_DATA;
+	}
+	for (int i = 0; i < MAX_NODE-1; i++) {
+		nodes[i]->next = nodes[i+1];
+	}
+	nodes[MAX_NODE-1]->next = nodes[0];
+	*head = nodes[0];
+	return is_ok;
+
+CLEAN_UP:
+	for (int i = 0; i < MAX_NODE; i++) {
+		if (nodes[i]) {
+			free(nodes[i]);
+		}
+	}
+	*head = NULL;
+	return is_ok;
+}
 // LLT_TEST {{{2
 
 bool
 llt_test(void) {
-	return zz_llt_ddelete();
+	return zz_llt_cprint();
 
 //	return true;
 }
@@ -770,5 +819,58 @@ llt_ddelete(struct llt_dnode ** head, int index) {
 		(fast->next)->prev = slow;
 	}
 	free(fast);
+	return true;
+}
+// CLIST {{{1
+
+bool
+llt_cnew(struct llt_cnode ** head) {
+	*head = malloc(sizeof(struct llt_cnode));
+	if (! *head) {
+		PRINT_ERROR("Memory error.");
+		return false;
+	}
+	(*head)->data = 0;
+	(*head)->next = NULL;
+	return true;
+}
+
+
+void
+llt_cprint(struct llt_cnode * head) {
+	struct llt_cnode * this = head;
+	for (int i = 0; this; i++) {
+		printf("%d: %d, ", i, this->data);
+		this = this->next;
+		if (this) {
+			printf("-> %d\n", this->data);
+		}
+		if (this == head) {
+			break;
+		}
+	}
+}
+
+
+bool
+llt_cfree(struct llt_cnode ** head) {
+	struct llt_cnode * this = *head;
+	struct llt_cnode * child = NULL;
+#if DEBUG_LLT
+	int i = 0;
+#endif
+	while (this) {
+#if DEBUG_LLT
+		printf("Del %d: %d\n", i, this->data);
+		i++;
+#endif
+		child = this->next;
+		if (child == *head) {
+			break;
+		}
+		free(this);
+		this = child;
+	}
+	*head = NULL;
 	return true;
 }

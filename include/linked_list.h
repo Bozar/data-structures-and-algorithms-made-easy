@@ -39,6 +39,18 @@ void llt_dprint(struct llt_dnode * head);
 bool llt_dfree(struct llt_dnode ** head);
 bool llt_dinsert(struct llt_dnode ** head, int data, int index);
 bool llt_ddelete(struct llt_dnode ** head, int index);
+// CLIST {{{1
+
+struct llt_cnode {
+	int data;
+	struct llt_cnode * next;
+};
+
+bool llt_cnew(struct llt_cnode ** node);
+void llt_cprint(struct llt_cnode * head);
+bool llt_cfree(struct llt_cnode ** head);
+bool llt_cinsert(struct llt_cnode ** head, int data, int index);
+bool llt_cdelete(struct llt_cnode ** head, int index);
 // EOF {{{1
 
 #endif // LINKED_LIST_H
