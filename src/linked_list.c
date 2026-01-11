@@ -15,6 +15,8 @@ NO_WARNING(-Wunused-function)
 
 #define MAX_NODE 10
 #define FIRST_DATA 42
+// Find the last node in zz_llt_cinsert().
+#define MAX_LOOP 99
 // ZZ_SLIST {{{2
 
 static bool zz_llt_snew(void);
@@ -520,7 +522,7 @@ CLEAN_UP:
 // ZZ_CLIST {{{2
 
 static bool zz_llt_cprint(void);
-//static bool zz_llt_cinsert(void);
+static bool zz_llt_cinsert(void);
 //static bool zz_llt_cdelete(void);
 
 static bool zz_clist(struct llt_cnode ** head);
@@ -566,11 +568,115 @@ CLEAN_UP:
 	*head = NULL;
 	return is_ok;
 }
+
+
+static bool
+zz_llt_cinsert(void) {
+	// Create a list.
+	struct llt_cnode * head = NULL;
+	bool is_ok = false;
+	if (! zz_clist(&head)) {
+		goto CLEAN_UP;
+	}
+	llt_cprint(head);
+	printf("\n");
+
+	// Test a negative index.
+	const int ERR = -1;
+	if (llt_cinsert(&head, ERR, ERR)) {
+		assert(false);
+	}
+	printf("\n");
+
+	// Insert head.
+	const int DT0 = 3, ID0 = 0;
+	struct llt_cnode * this = NULL;
+	if (! llt_cinsert(&head, DT0, ID0)) {
+		goto CLEAN_UP;
+	}
+	printf("Insert: %d-%d\n", ID0, DT0);
+	llt_cprint(head);
+	this = head;
+	assert(this->data == DT0);
+	for (int i = 0; i < MAX_LOOP; i++) {
+		if (! this) {
+			assert(false);
+		}
+		if (this->next == head) {
+			break;
+		}
+		this = this->next;
+	}
+	assert(this->next == head);
+	printf("\n");
+
+	// Insert tail (last index).
+	const int DT1 = 11, ID1 = MAX_NODE+1;
+	if (! llt_cinsert(&head, DT1, ID1)) {
+		goto CLEAN_UP;
+	}
+	printf("Insert: %d-%d\n", ID1, DT1);
+	llt_cprint(head);
+	this = head;
+	for (int i = 0; i < MAX_LOOP; i++) {
+		if (! this) {
+			assert(false);
+		}
+		if (this->next == head) {
+			break;
+		}
+		this = this->next;
+	}
+	assert(this->data == DT1);
+	assert(this->next == head);
+	printf("\n");
+
+	// Insert tail (overflow index).
+	const int DT2 = 23, ID2 = MAX_NODE*2;
+	if (! llt_cinsert(&head, DT2, ID2)) {
+		goto CLEAN_UP;
+	}
+	printf("Insert: %d-%d\n", ID2, DT2);
+	llt_cprint(head);
+	this = head;
+	for (int i = 0; i < MAX_LOOP; i++) {
+		if (! this) {
+			assert(false);
+		}
+		if (this->next == head) {
+			break;
+		}
+		this = this->next;
+	}
+	assert(this->data == DT2);
+	assert(this->next == head);
+	printf("\n");
+
+	// Insert middle.
+	const int DT3 = 7, ID3 = MAX_NODE/2;
+	if (! llt_cinsert(&head, DT3, ID3)) {
+		goto CLEAN_UP;
+	}
+	this = head;
+	for (int i = 0; i < ID3; i++) {
+		this = this->next;
+	}
+	printf("Insert: %d-%d\n", ID3, DT3);
+	llt_cprint(head);
+	assert(this->data == DT3);
+	printf("\n");
+
+	is_ok = true;
+CLEAN_UP:
+	llt_cfree(&head);
+	return is_ok;
+}
 // LLT_TEST {{{2
 
 bool
 llt_test(void) {
-	return zz_llt_cprint();
+	return zz_llt_cinsert();
+//	return zz_llt_cprint();
 
 //	return true;
 }
@@ -872,5 +978,48 @@ llt_cfree(struct llt_cnode ** head) {
 		this = child;
 	}
 	*head = NULL;
+	return true;
+}
+
+
+bool
+llt_cinsert(struct llt_cnode ** head, int data, int index) {
+	if (! *head) {
+		PRINT_ERROR("Head is NULL.");
+		return false;
+	} else if (index < 0) {
+		PRINT_ERROR("Index is negative.");
+		return false;
+	}
+
+	struct llt_cnode * node = NULL;
+	if (! llt_cnew(&node)) {
+		PRINT_ERROR("Memory error.");
+		free(node);
+		return false;
+	}
+
+	struct llt_cnode * tail = *head;
+	while (tail->next != *head) {
+		tail = tail->next;
+	}
+	node->data = data;
+	if (index == 0) {
+		node->next = *head;
+		*head = node;
+		tail->next = *head;
+		return true;
+	}
+
+	struct llt_cnode * this = *head;
+	// New node occupies position `index`.
+	for (int i = 0; i < index-1; i++) {
+		if (this->next == *head) {
+			break;
+		}
+		this = this->next;
+	}
+	node->next = this->next;
+	this->next = node;
 	return true;
 }
