@@ -773,10 +773,10 @@ CLEAN_UP:
 
 bool
 llt_test(void) {
-	return zz_llt_cdelete();
+//	return zz_llt_sinsert();
 //	return zz_llt_cprint();
 
-//	return true;
+	return true;
 }
 
 
@@ -787,7 +787,7 @@ NO_WARNING_END
 bool
 llt_snew(struct llt_snode ** head) {
 	*head = malloc(sizeof(struct llt_snode));
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Memory error.");
 		return false;
 	}
@@ -830,7 +830,7 @@ llt_sfree(struct llt_snode ** head) {
 
 bool
 llt_sinsert(struct llt_snode ** head, int data, int index) {
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
@@ -855,7 +855,7 @@ llt_sinsert(struct llt_snode ** head, int data, int index) {
 	struct llt_snode * this = *head;
 	// New node occupies position `index`.
 	for (int i = 0; i < index-1; i++) {
-		if (! this->next) {
+		if (this->next == NULL) {
 			break;
 		}
 		this = this->next;
@@ -868,7 +868,7 @@ llt_sinsert(struct llt_snode ** head, int data, int index) {
 
 bool
 llt_sdelete(struct llt_snode ** head, int index) {
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
@@ -886,7 +886,7 @@ llt_sdelete(struct llt_snode ** head, int index) {
 	struct llt_snode * slow = *head;
 	fast = (*head)->next;
 	for (int i = 0; i < index-1; i++) {
-		if (! fast->next) {
+		if (fast->next == NULL) {
 			break;
 		}
 		fast = fast->next;
@@ -901,7 +901,7 @@ llt_sdelete(struct llt_snode ** head, int index) {
 bool
 llt_dnew(struct llt_dnode ** head) {
 	*head = malloc(sizeof(struct llt_dnode));
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Memory error.");
 		return false;
 	}
@@ -950,7 +950,7 @@ llt_dfree(struct llt_dnode ** head) {
 
 bool
 llt_dinsert(struct llt_dnode ** head, int data, int index) {
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
@@ -976,7 +976,7 @@ llt_dinsert(struct llt_dnode ** head, int data, int index) {
 	struct llt_dnode * this = *head;
 	// New node occupies position `index`.
 	for (int i = 0; i < index-1; i++) {
-		if (! this->next) {
+		if (this->next == NULL) {
 			break;
 		}
 		this = this->next;
@@ -993,7 +993,7 @@ llt_dinsert(struct llt_dnode ** head, int data, int index) {
 
 bool
 llt_ddelete(struct llt_dnode ** head, int index) {
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
@@ -1012,7 +1012,7 @@ llt_ddelete(struct llt_dnode ** head, int index) {
 	struct llt_dnode * slow = *head;
 	fast = (*head)->next;
 	for (int i = 0; i < index-1; i++) {
-		if (! fast->next) {
+		if (fast->next == NULL) {
 			break;
 		}
 		fast = fast->next;
@@ -1030,7 +1030,7 @@ llt_ddelete(struct llt_dnode ** head, int index) {
 bool
 llt_cnew(struct llt_cnode ** head) {
 	*head = malloc(sizeof(struct llt_cnode));
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Memory error.");
 		return false;
 	}
@@ -1082,7 +1082,7 @@ llt_cfree(struct llt_cnode ** head) {
 
 bool
 llt_cinsert(struct llt_cnode ** head, int data, int index) {
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
@@ -1125,7 +1125,7 @@ llt_cinsert(struct llt_cnode ** head, int data, int index) {
 
 bool
 llt_cdelete(struct llt_cnode ** head, int index) {
-	if (! *head) {
+	if (*head == NULL) {
 		PRINT_ERROR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
