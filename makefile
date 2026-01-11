@@ -1,4 +1,4 @@
-FILE_OBJ = main.o linked_list.o
+FILE_OBJ = 3_5.o linked_list.o
 FILE_SRC = $(subst .o,.c,$(FILE_OBJ))
 FILE_DEP = $(subst .o,.d,$(FILE_OBJ))
 

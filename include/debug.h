@@ -10,7 +10,7 @@
 
 #if ! defined(NDEBUG)
 
-#define DEBUG_LLT 1
+#define DEBUG_LLT 0
 
 #endif
 
