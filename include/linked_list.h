@@ -22,7 +22,7 @@ struct llt_snode {
 };
 
 bool llt_snew(struct llt_snode ** node);
-void llt_sprint(struct llt_snode * head);
+void llt_sprint(const struct llt_snode * head);
 bool llt_sfree(struct llt_snode ** head);
 bool llt_sinsert(struct llt_snode ** head, int data, int index);
 bool llt_sdelete(struct llt_snode ** head, int index);
@@ -35,7 +35,7 @@ struct llt_dnode {
 };
 
 bool llt_dnew(struct llt_dnode ** node);
-void llt_dprint(struct llt_dnode * head);
+void llt_dprint(const struct llt_dnode * head);
 bool llt_dfree(struct llt_dnode ** head);
 bool llt_dinsert(struct llt_dnode ** head, int data, int index);
 bool llt_ddelete(struct llt_dnode ** head, int index);
@@ -47,7 +47,7 @@ struct llt_cnode {
 };
 
 bool llt_cnew(struct llt_cnode ** node);
-void llt_cprint(struct llt_cnode * head);
+void llt_cprint(const struct llt_cnode * head);
 bool llt_cfree(struct llt_cnode ** head);
 bool llt_cinsert(struct llt_cnode ** head, int data, int index);
 bool llt_cdelete(struct llt_cnode ** head, int index);

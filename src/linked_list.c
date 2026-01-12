@@ -773,9 +773,7 @@ CLEAN_UP:
 
 bool
 llt_test(void) {
-//	return zz_llt_sinsert();
-//	return zz_llt_cprint();
-
+//	return zz_llt_cdelete();
 	return true;
 }
 
@@ -798,8 +796,8 @@ llt_snew(struct llt_snode ** head) {
 
 
 void
-llt_sprint(struct llt_snode * head) {
-	struct llt_snode * this = head;
+llt_sprint(const struct llt_snode * head) {
+	const struct llt_snode * this = head;
 	for (int i = 0; this; i++) {
 		printf("%d: %d\n", i, this->data);
 		this = this->next;
@@ -913,8 +911,8 @@ llt_dnew(struct llt_dnode ** head) {
 
 
 void
-llt_dprint(struct llt_dnode * head) {
-	struct llt_dnode * this = head;
+llt_dprint(const struct llt_dnode * head) {
+	const struct llt_dnode * this = head;
 	for (int i = 0; this; i++) {
 		printf("%d: %d, ", i, this->data);
 		if (this->prev) {
@@ -1041,8 +1039,8 @@ llt_cnew(struct llt_cnode ** head) {
 
 
 void
-llt_cprint(struct llt_cnode * head) {
-	struct llt_cnode * this = head;
+llt_cprint(const struct llt_cnode * head) {
+	const struct llt_cnode * this = head;
 	for (int i = 0; this; i++) {
 		printf("%d: %d, ", i, this->data);
 		this = this->next;
