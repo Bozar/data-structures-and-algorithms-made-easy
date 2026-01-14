@@ -29,7 +29,7 @@
 #define NO_WARNING_BEGIN \
 		DO_PRAGMA(GCC diagnostic push)
 #define NO_WARNING_END \
-		DO_PRAGMA(GCC diagnostic pop) 
+		DO_PRAGMA(GCC diagnostic pop)
 #define NO_WARNING(warn) \
 		DO_PRAGMA(GCC diagnostic ignored #warn)
 // EOF {{{1
