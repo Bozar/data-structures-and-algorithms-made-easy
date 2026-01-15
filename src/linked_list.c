@@ -1033,7 +1033,7 @@ llt_cnew(struct llt_cnode ** head) {
 		return false;
 	}
 	(*head)->data = 0;
-	(*head)->next = NULL;
+	(*head)->next = *head;
 	return true;
 }
 
