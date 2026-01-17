@@ -17,13 +17,13 @@ static struct llt_snode *
 create_list(void) {
 	struct llt_snode * head = NULL;
 	if (! llt_snew(&head)) {
-		PRINT_ERROR("Failed: llt_snew().");
+		PRINT_ERR("Failed: llt_snew().");
 		exit(EXIT_FAILURE);
 	}
 	head->data = 42;
 	for (int i = 1; i < 10; i++) {
 		if (! llt_sinsert(&head, i+42, i)) {
-			PRINT_ERROR("Failed: llt_sinsert().");
+			PRINT_ERR("Failed: llt_sinsert().");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -35,7 +35,7 @@ create_list(void) {
 static bool
 free_list(struct llt_snode * head) {
 	if (! llt_sfree(&head)) {
-		PRINT_ERROR("Failed: llt_sfree().");
+		PRINT_ERR("Failed: llt_sfree().");
 		return false;
 	}
 	return true;
@@ -45,10 +45,10 @@ free_list(struct llt_snode * head) {
 static const struct llt_snode *
 get_tail_node(const struct llt_snode * head, int index) {
 	if (head == NULL) {
-		PRINT_ERROR("Head is NULL.");
+		PRINT_ERR("Head is NULL.");
 		return NULL;
 	} else if (index < 0) {
-		PRINT_ERROR("Index is negative.");
+		PRINT_ERR("Index is negative.");
 		return NULL;
 	}
 

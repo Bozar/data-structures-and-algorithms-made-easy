@@ -90,9 +90,9 @@ zz_llt_sfree(void) {
 
 	printf("\n");
 	if (! llt_sfree(&node)) {
-		PRINT_ERROR("Failed: llt_sfree().");
+		PRINT_ERR("Failed: llt_sfree().");
 	} else if (node != NULL) {
-		PRINT_ERROR("Node is NOT NULL.");
+		PRINT_ERR("Node is NOT NULL.");
 	} else {
 		is_ok = true;
 	}
@@ -786,7 +786,7 @@ bool
 llt_snew(struct llt_snode ** head) {
 	*head = malloc(sizeof(struct llt_snode));
 	if (*head == NULL) {
-		PRINT_ERROR("Memory error.");
+		PRINT_ERR("Memory error.");
 		return false;
 	}
 	(*head)->data = 0;
@@ -829,16 +829,16 @@ llt_sfree(struct llt_snode ** head) {
 bool
 llt_sinsert(struct llt_snode ** head, int data, int index) {
 	if (*head == NULL) {
-		PRINT_ERROR("Head is NULL.");
+		PRINT_ERR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
-		PRINT_ERROR("Index is negative.");
+		PRINT_ERR("Index is negative.");
 		return false;
 	}
 
 	struct llt_snode * node = NULL;
 	if (! llt_snew(&node)) {
-		PRINT_ERROR("Memory error.");
+		PRINT_ERR("Memory error.");
 		free(node);
 		return false;
 	}
@@ -867,10 +867,10 @@ llt_sinsert(struct llt_snode ** head, int data, int index) {
 bool
 llt_sdelete(struct llt_snode ** head, int index) {
 	if (*head == NULL) {
-		PRINT_ERROR("Head is NULL.");
+		PRINT_ERR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
-		PRINT_ERROR("Index is negative.");
+		PRINT_ERR("Index is negative.");
 		return false;
 	}
 
@@ -900,7 +900,7 @@ bool
 llt_dnew(struct llt_dnode ** head) {
 	*head = malloc(sizeof(struct llt_dnode));
 	if (*head == NULL) {
-		PRINT_ERROR("Memory error.");
+		PRINT_ERR("Memory error.");
 		return false;
 	}
 	(*head)->data = 0;
@@ -949,16 +949,16 @@ llt_dfree(struct llt_dnode ** head) {
 bool
 llt_dinsert(struct llt_dnode ** head, int data, int index) {
 	if (*head == NULL) {
-		PRINT_ERROR("Head is NULL.");
+		PRINT_ERR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
-		PRINT_ERROR("Index is negative.");
+		PRINT_ERR("Index is negative.");
 		return false;
 	}
 
 	struct llt_dnode * node = NULL;
 	if (! llt_dnew(&node)) {
-		PRINT_ERROR("Memory error.");
+		PRINT_ERR("Memory error.");
 		free(node);
 		return false;
 	}
@@ -992,10 +992,10 @@ llt_dinsert(struct llt_dnode ** head, int data, int index) {
 bool
 llt_ddelete(struct llt_dnode ** head, int index) {
 	if (*head == NULL) {
-		PRINT_ERROR("Head is NULL.");
+		PRINT_ERR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
-		PRINT_ERROR("Index is negative.");
+		PRINT_ERR("Index is negative.");
 		return false;
 	}
 
@@ -1029,7 +1029,7 @@ bool
 llt_cnew(struct llt_cnode ** head) {
 	*head = malloc(sizeof(struct llt_cnode));
 	if (*head == NULL) {
-		PRINT_ERROR("Memory error.");
+		PRINT_ERR("Memory error.");
 		return false;
 	}
 	(*head)->data = 0;
@@ -1081,16 +1081,16 @@ llt_cfree(struct llt_cnode ** head) {
 bool
 llt_cinsert(struct llt_cnode ** head, int data, int index) {
 	if (*head == NULL) {
-		PRINT_ERROR("Head is NULL.");
+		PRINT_ERR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
-		PRINT_ERROR("Index is negative.");
+		PRINT_ERR("Index is negative.");
 		return false;
 	}
 
 	struct llt_cnode * node = NULL;
 	if (! llt_cnew(&node)) {
-		PRINT_ERROR("Memory error.");
+		PRINT_ERR("Memory error.");
 		free(node);
 		return false;
 	}
@@ -1124,10 +1124,10 @@ llt_cinsert(struct llt_cnode ** head, int data, int index) {
 bool
 llt_cdelete(struct llt_cnode ** head, int index) {
 	if (*head == NULL) {
-		PRINT_ERROR("Head is NULL.");
+		PRINT_ERR("Head is NULL.");
 		return false;
 	} else if (index < 0) {
-		PRINT_ERROR("Index is negative.");
+		PRINT_ERR("Index is negative.");
 		return false;
 	}
 

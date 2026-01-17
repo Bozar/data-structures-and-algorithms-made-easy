@@ -17,14 +17,14 @@ static void split(
 static void
 create_list(struct llt_cnode ** head) {
 	if (! llt_cnew(head)) {
-		PRINT_ERROR("Failed: llt_cnew().");
+		PRINT_ERR("Failed: llt_cnew().");
 		exit(EXIT_FAILURE);
 	}
 
 	(*head)->data = 42;
 	for (int i = 1; i < 6; i++) {
 		if (! llt_cinsert(head, i+42, i)) {
-			PRINT_ERROR("Failed: llt_sinsert().");
+			PRINT_ERR("Failed: llt_sinsert().");
 			exit(EXIT_FAILURE);
 		}
 	}

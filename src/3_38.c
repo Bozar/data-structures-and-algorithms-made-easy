@@ -20,14 +20,14 @@ static void reverse_block(
 static void
 create_list(struct llt_snode ** head) {
 	if (! llt_snew(head)) {
-		PRINT_ERROR("Failed: llt_cnew().");
+		PRINT_ERR("Failed: llt_cnew().");
 		exit(EXIT_FAILURE);
 	}
 
 	(*head)->data = 0;
 	for (int i = 1; i < 10; i++) {
 		if (! llt_sinsert(head, i, i)) {
-			PRINT_ERROR("Failed: llt_sinsert().");
+			PRINT_ERR("Failed: llt_sinsert().");
 			exit(EXIT_FAILURE);
 		}
 	}

@@ -20,10 +20,10 @@ static void merge_recursive(
 static void
 create_list(struct llt_snode ** head1, struct llt_snode ** head2) {
 	if (! llt_snew(head1)) {
-		PRINT_ERROR("Failed: llt_snew().");
+		PRINT_ERR("Failed: llt_snew().");
 		exit(EXIT_FAILURE);
 	} else if (! llt_snew(head2)) {
-		PRINT_ERROR("Failed: llt_snew().");
+		PRINT_ERR("Failed: llt_snew().");
 		exit(EXIT_FAILURE);
 	}
 
@@ -32,20 +32,20 @@ create_list(struct llt_snode ** head1, struct llt_snode ** head2) {
 	for (int i = 1; i < 5; i++) {
 		if (i < 3) {
 			if (! llt_sinsert(head1, i, i)) {
-				PRINT_ERROR("Failed: llt_sinsert().");
+				PRINT_ERR("Failed: llt_sinsert().");
 				exit(EXIT_FAILURE);
 			}
 			if (! llt_sinsert(head2, i+2, i)) {
-				PRINT_ERROR("Failed: llt_sinsert().");
+				PRINT_ERR("Failed: llt_sinsert().");
 				exit(EXIT_FAILURE);
 			}
 		} else {
 			if (! llt_sinsert(head1, i+42-3+2, i)) {
-				PRINT_ERROR("Failed: llt_sinsert().");
+				PRINT_ERR("Failed: llt_sinsert().");
 				exit(EXIT_FAILURE);
 			}
 			if (! llt_sinsert(head2, i+42-3, i)) {
-				PRINT_ERROR("Failed: llt_sinsert().");
+				PRINT_ERR("Failed: llt_sinsert().");
 				exit(EXIT_FAILURE);
 			}
 		}
