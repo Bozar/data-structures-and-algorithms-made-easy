@@ -11,6 +11,7 @@
 #if ! defined(NDEBUG)
 
 #define DEBUG_LLT 0
+#define DEBUG_STK 1
 
 #endif
 // PRINT_MESSAGE {{{1

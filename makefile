@@ -1,7 +1,6 @@
-FILE_OBJ = 3_40.o linked_list.o
-#FILE_OBJ = main.o linked_list.o
-FILE_SRC = $(subst .o,.c,$(FILE_OBJ))
-FILE_DEP = $(subst .o,.d,$(FILE_OBJ))
+FILE_SRC := main.c stack.c linked_list.c
+FILE_OBJ := $(subst .c,.o,$(FILE_SRC))
+FILE_DEP := $(subst .c,.d,$(FILE_SRC))
 
 #FILE_OBJ = $(patsubst %.c,%.o,$(FILE_SRC))
 #FILE_SRC = $(notdir $(shell find $(DIR_SRC) -type f -name '*.c'))
@@ -38,7 +37,7 @@ $(PATH_OBJ): $(DIR_BUILD)/%.o: $(DIR_SRC)/%.c
 	$(CC) $(FLAG_INCLUDE) $(FLAG_WARN) $(FLAG_MISC) $(CFLAGS) -c $< -o $@
 
 
-# https://gcc.gnu.org/onlinedocs/gcc-4.5.3/gcc/Preprocessor-Options.html#Preprocessor-Options
+# https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html
 $(PATH_DEP): $(DIR_BUILD)/%.d: $(DIR_SRC)/%.c
 	$(CC) $(FLAG_INCLUDE) -MM -MT $(patsubst %.d,%.o,$@) $< -o $@
 

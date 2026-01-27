@@ -1,5 +1,4 @@
 *.swp
-note.txt
 
-build/*
-!build/.gitkeep
+**/build/*
+!**/build/.gitkeep
