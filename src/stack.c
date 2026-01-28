@@ -7,7 +7,7 @@
 #include "stack.h"
 #include "linked_list.h"
 
-#define INIT_SIZE 10
+#define INIT_SIZE 8
 // DEBUG {{{1
 // MARCO {{{2
 
@@ -224,9 +224,9 @@ CLEAN_UP:
 
 bool
 stk_test(void) {
-	struct stk_astack * stack = NULL;
-	return zz_stk_anew(&stack);
-//	return zz_stk_loperate();
+//	struct stk_astack * stack = NULL;
+//	return zz_stk_anew(&stack);
+	return zz_stk_aoperate();
 
 //	struct stk_lstack * stack = NULL;
 //	return zz_stk_lnew(&stack);
@@ -348,7 +348,7 @@ stk_anew(struct stk_astack ** stack) {
 		PRINT_ERR("Memory error.");
 		return false;
 	}
-	(*stack)->array = malloc(sizeof(int) * INIT_SIZE);
+	(*stack)->array = malloc(sizeof(int)*INIT_SIZE);
 	if ((*stack)->array == NULL) {
 		PRINT_ERR("Memory error.");
 		return false;
@@ -391,4 +391,69 @@ stk_afree(struct stk_astack ** stack) {
 	}
 	free(*stack);
 	*stack = NULL;
+}
+
+
+bool
+stk_apush(struct stk_astack * stack, int data) {
+	if (stack == NULL) {
+		PRINT_ERR("Stack is null.");
+		return false;
+	}
+
+	int * new_array = NULL;
+	if ((stack->top)+1 >= (int)stack->max_size) {
+		new_array = realloc(
+				stack->array, sizeof(int)*(stack->max_size)*2
+		);
+		if (new_array == NULL) {
+			PRINT_ERR("Memory error.");
+			return false;
+		}
+		stack->max_size *= 2;
+		stack->array = new_array;
+	} else if (stack->array == NULL) {
+		PRINT_ERR("Array is NULL.");
+		return false;
+	}
+
+	stack->top += 1;
+	(stack->array)[stack->top] = data;
+	return true;
+}
+
+
+bool
+stk_apop(struct stk_astack * stack, int * data) {
+	if (stack == NULL) {
+		PRINT_ERR("Stack is null.");
+		return false;
+	} else if (stack->array == NULL) {
+		PRINT_ERR("Array is NULL.");
+		return false;
+	} else if (stack->top < 0) {
+		return false;
+	}
+
+	*data = (stack->array)[stack->top];
+	(stack->array)[stack->top] = 0;
+	stack->top -= 1;
+	return true;
+}
+
+
+bool
+stk_apeek(struct stk_astack * stack, int * data) {
+	if (stack == NULL) {
+		PRINT_ERR("Stack is null.");
+		return false;
+	} else if (stack->array == NULL) {
+		PRINT_ERR("Array is NULL.");
+		return false;
+	} else if ((stack->top < 0) || (stack->top+1 > (int)stack->max_size)) {
+		return false;
+	}
+
+	*data = (stack->array)[stack->top];
+	return true;
 }

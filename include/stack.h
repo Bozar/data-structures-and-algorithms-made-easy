@@ -32,7 +32,7 @@ void stk_lfree(struct stk_lstack ** stack);
 
 struct stk_astack {
 	int top;
-	int max_size;
+	unsigned max_size;
 	int * array;
 };
 
