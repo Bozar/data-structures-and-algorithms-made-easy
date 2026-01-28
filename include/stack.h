@@ -28,6 +28,21 @@ bool stk_lpeek(struct stk_lstack * stack, int * data);
 bool stk_lis_empty(struct stk_lstack * stack);
 int stk_lsize(struct stk_lstack * stack);
 void stk_lfree(struct stk_lstack ** stack);
+// ARRAY_LIST {{{1
+
+struct stk_astack {
+	int top;
+	int max_size;
+	int * array;
+};
+
+bool stk_anew(struct stk_astack ** stack);
+bool stk_apush(struct stk_astack * stack, int data);
+bool stk_apop(struct stk_astack * stack, int * data);
+bool stk_apeek(struct stk_astack * stack, int * data);
+bool stk_ais_empty(struct stk_astack * stack);
+int stk_asize(struct stk_astack * stack);
+void stk_afree(struct stk_astack ** stack);
 // EOF {{{1
 
 #endif // STACK_H
