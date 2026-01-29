@@ -10,15 +10,18 @@ FILE_MAIN := main.c
 FILE_GIT_KEEP := .gitkeep
 FILE_GIT_IGNORE := .gitignore
 FILE_DEBUG := debug.h
+FILE_TAG := tags
 
 DIR_BUILD := ./build
 DIR_INCLUDE := ./include
 DIR_SRC := ./src
 
+PATH_SRC := $(addprefix $(DIR_SRC)/,$(FILE_SRC))
 PATH_OBJ := $(addprefix $(DIR_BUILD)/,$(FILE_OBJ))
 PATH_DEP := $(addprefix $(DIR_BUILD)/,$(FILE_DEP))
 PATH_EXEC := $(addprefix $(DIR_BUILD)/,$(FILE_EXEC))
 PATH_DEBUG := $(addprefix $(DIR_INCLUDE)/,$(FILE_DEBUG))
+PATH_TAG := ./$(FILE_TAG)
 
 FLAG_INCLUDE := -I$(DIR_INCLUDE)
 FLAG_WARN := -ansi -pedantic -std=c99 -Wall -Wextra \
@@ -30,6 +33,7 @@ CC := gcc
 
 $(PATH_EXEC): $(PATH_OBJ)
 	$(CC) $(FLAG_INCLUDE) $^ -o $@
+	$(MAKE) $(PATH_TAG)
 
 
 #$(PATH_OBJ): $(DIR_BUILD)/%.o: $(DIR_SRC)/%.c $(MAKEFILE_LIST)
@@ -42,6 +46,10 @@ $(PATH_DEP): $(DIR_BUILD)/%.d: $(DIR_SRC)/%.c
 	$(CC) $(FLAG_INCLUDE) -MM -MT $(patsubst %.d,%.o,$@) $< -o $@
 
 -include $(PATH_DEP)
+
+
+$(PATH_TAG): $(PATH_SRC)
+	ctags --tag-relative=never -R .
 
 
 .PHONY: init
