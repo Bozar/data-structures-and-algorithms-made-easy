@@ -1,4 +1,5 @@
-FILE_SRC := main.c stack.c linked_list.c
+FILE_SRC := 4_1.c stack.c linked_list.c
+#FILE_SRC := main.c stack.c linked_list.c
 FILE_OBJ := $(subst .c,.o,$(FILE_SRC))
 FILE_DEP := $(subst .c,.d,$(FILE_SRC))
 
