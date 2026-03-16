@@ -15,32 +15,32 @@ NO_WARNING(-Wunused-function)
 // ZZ_QUE_LINKED_LIST {{{2
 
 // new(), is_empty(), size(), free()
-//static bool zz_que_lnew(struct que_lqueue ** queue);
+static bool zz_que_lnew(struct que_lqueue ** queue);
 //static bool zz_que_loperate(void);
-//
-//
-//static bool
-//zz_que_lnew(struct que_lqueue ** queue) {
-//	if (! que_lnew(queue)) {
-//		PRINT_ERR("Failed: que_lnew()");
-//		assert(false);
-//	} else if (! que_lis_empty(*queue)) {
-//		PRINT_ERR("Failed: que_lis_empty()");
-//		assert(false);
-//	} else if (que_lsize(*queue) != 0) {
-//		PRINT_ERR("Failed: que_lsize()");
-//		assert(false);
-//	}
-//	que_lfree(queue);
-//	if (*queue != NULL) {
-//		PRINT_ERR("Failed: que_lfree()");
-//		assert(false);
-//	}
-//	PRINT_LOG("Passed.");
-//	return true;
-//}
-//
-//
+
+
+static bool
+zz_que_lnew(struct que_lqueue ** queue) {
+	if (! que_lnew(queue)) {
+		PRINT_ERR("Failed: que_lnew()");
+		assert(false);
+	} else if (! que_lis_empty(*queue)) {
+		PRINT_ERR("Failed: que_lis_empty()");
+		assert(false);
+	} else if (que_lsize(*queue) != 0) {
+		PRINT_ERR("Failed: que_lsize()");
+		assert(false);
+	}
+	que_lfree(queue);
+	if (*queue != NULL) {
+		PRINT_ERR("Failed: que_lfree()");
+		assert(false);
+	}
+	PRINT_LOG("Passed.");
+	return true;
+}
+
+
 //static bool
 //zz_que_loperate(void) {
 //	struct que_lqueue * queue = NULL;
@@ -222,14 +222,12 @@ NO_WARNING(-Wunused-function)
 
 bool
 que_test(void) {
-	PRINT_LOG("Queue");
-	return true;
 //	struct que_aqueue * queue = NULL;
 //	return zz_que_anew(&queue);
 //	return zz_que_aoperate();
 
-//	struct que_lqueue * queue = NULL;
-//	return zz_que_lnew(&queue);
+	struct que_lqueue * queue = NULL;
+	return zz_que_lnew(&queue);
 //	return zz_que_loperate();
 }
 
@@ -237,67 +235,76 @@ NO_WARNING_END
 #endif // DEBUG_QUE
 // LINKED_LIST {{{1
 
-//bool
-//que_lnew(struct que_lqueue ** queue) {
-//	*queue = malloc(sizeof(struct que_lqueue));
-//	if (*queue == NULL) {
-//		PRINT_ERR("Memory error.");
-//		return false;
-//	}
-//	(*queue)->top = NULL;
-//	(*queue)->size = 0;
-//	return true;
-//}
-//
-//
-//bool
-//que_lis_empty(struct que_lqueue * queue) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
-//		return false;
-//	}
-//
-//	bool no_top = (queue->top == NULL);
-//	bool no_size = (queue->size == 0);
-//	if (no_top && no_size) {
-//		return true;
-//	} else if (no_top ^ no_size) {
-//		PRINT_ERR("No top: %d, no size: %d", no_top, no_size);
-//	}
-//	return false;
-//}
-//
-//
-//int
-//que_lsize(struct que_lqueue * queue) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
-//		return -1;
-//	}
-//	return queue->size;
-//}
-//
-//
-//void
-//que_lfree(struct que_lqueue ** queue) {
-//	if (*queue == NULL) {
-//		return;
-//	}
-//
-//	if ((*queue)->top != NULL) {
-//		llt_sfree(&((*queue)->top));
-//		(*queue)->top = NULL;
-//	}
-//	free(*queue);
-//	*queue = NULL;
-//}
-//
-//
+bool
+que_lnew(struct que_lqueue ** queue) {
+	*queue = malloc(sizeof(struct que_lqueue));
+	if (*queue == NULL) {
+		PRINT_ERR("Memory error.");
+		return false;
+	}
+	(*queue)->front = NULL;
+	(*queue)->rear = NULL;
+	(*queue)->size = 0;
+	return true;
+}
+
+
+bool
+que_lis_empty(struct que_lqueue * queue) {
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return false;
+	}
+
+	bool no_front = (queue->front == NULL);
+	bool no_rear = (queue->rear == NULL);
+	bool no_size = (queue->size == 0);
+	if (no_front && no_rear && no_size) {
+		return true;
+	} else if (no_front ^ no_rear ^ no_size) {
+		PRINT_ERR(
+				"No front: %d, no rear: %d, no size: %d",
+				no_front, no_rear, no_size
+		);
+	}
+	return false;
+}
+
+
+int
+que_lsize(struct que_lqueue * queue) {
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return -1;
+	}
+	return queue->size;
+}
+
+
+void
+que_lfree(struct que_lqueue ** queue) {
+	if (*queue == NULL) {
+		return;
+	}
+
+	if ((*queue)->front != NULL) {
+		llt_sfree(&((*queue)->front));
+		(*queue)->front = NULL;
+	}
+	if ((*queue)->rear != NULL) {
+		llt_sfree(&((*queue)->rear));
+		(*queue)->rear = NULL;
+	}
+	free(*queue);
+	*queue = NULL;
+}
+
+
 //bool
 //que_lpush(struct que_lqueue * queue, int data) {
 //	struct llt_snode * node = NULL;
 //	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
+//		PRINT_ERR("Queue is null.");
 //		return false;
 //	} else if (! llt_snew(&node)) {
 //		return false;
@@ -314,7 +321,7 @@ NO_WARNING_END
 //bool
 //que_lpop(struct que_lqueue * queue, int * data) {
 //	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
+//		PRINT_ERR("Queue is null.");
 //		return false;
 //	} else if (queue->top == NULL) {
 //		return false;
@@ -330,7 +337,7 @@ NO_WARNING_END
 //bool
 //que_lpeek(struct que_lqueue * queue, int * data) {
 //	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
+//		PRINT_ERR("Queue is null.");
 //		return false;
 //	} else if (queue->top == NULL) {
 //		return false;
@@ -362,7 +369,7 @@ NO_WARNING_END
 //bool
 //que_ais_empty(struct que_aqueue * queue) {
 //	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
+//		PRINT_ERR("Queue is null.");
 //		return false;
 //	}
 //	return queue->top < 0;
@@ -372,7 +379,7 @@ NO_WARNING_END
 //int
 //que_asize(struct que_aqueue * queue) {
 //	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
+//		PRINT_ERR("Queue is null.");
 //		return -1;
 //	}
 //	return (queue->top)+1;
@@ -397,7 +404,7 @@ NO_WARNING_END
 //bool
 //que_apush(struct que_aqueue * queue, int data) {
 //	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
+//		PRINT_ERR("Queue is null.");
 //		return false;
 //	}
 //
@@ -426,7 +433,7 @@ NO_WARNING_END
 //bool
 //que_apop(struct que_aqueue * queue, int * data) {
 //	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
+//		PRINT_ERR("Queue is null.");
 //		return false;
 //	} else if (queue->array == NULL) {
 //		PRINT_ERR("Array is NULL.");
@@ -445,7 +452,7 @@ NO_WARNING_END
 //bool
 //que_apeek(struct que_aqueue * queue, int * data) {
 //	if (queue == NULL) {
-//		PRINT_ERR("Stack is null.");
+//		PRINT_ERR("Queue is null.");
 //		return false;
 //	} else if (queue->array == NULL) {
 //		PRINT_ERR("Array is NULL.");
