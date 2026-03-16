@@ -6,8 +6,6 @@
 
 #include "stack.h"
 #include "linked_list.h"
-
-#define INIT_SIZE 8
 // DEBUG {{{1
 // MARCO {{{2
 
@@ -348,13 +346,13 @@ stk_anew(struct stk_astack ** stack) {
 		PRINT_ERR("Memory error.");
 		return false;
 	}
-	(*stack)->array = malloc(sizeof(int)*INIT_SIZE);
+	(*stack)->array = malloc(sizeof(int)*INIT_STACK_SIZE);
 	if ((*stack)->array == NULL) {
 		PRINT_ERR("Memory error.");
 		return false;
 	}
 	(*stack)->top = -1;
-	(*stack)->max_size = INIT_SIZE;
+	(*stack)->max_size = INIT_STACK_SIZE;
 	return true;
 }
 
@@ -399,6 +397,9 @@ stk_apush(struct stk_astack * stack, int data) {
 	if (stack == NULL) {
 		PRINT_ERR("Stack is null.");
 		return false;
+	} else if (stack->array == NULL) {
+		PRINT_ERR("Array is NULL.");
+		return false;
 	}
 
 	int * new_array = NULL;
@@ -412,9 +413,6 @@ stk_apush(struct stk_astack * stack, int data) {
 		}
 		stack->max_size *= 2;
 		stack->array = new_array;
-	} else if (stack->array == NULL) {
-		PRINT_ERR("Array is NULL.");
-		return false;
 	}
 
 	stack->top += 1;
@@ -425,17 +423,10 @@ stk_apush(struct stk_astack * stack, int data) {
 
 bool
 stk_apop(struct stk_astack * stack, int * data) {
-	if (stack == NULL) {
-		PRINT_ERR("Stack is null.");
-		return false;
-	} else if (stack->array == NULL) {
-		PRINT_ERR("Array is NULL.");
-		return false;
-	} else if (stack->top < 0) {
+	if (! stk_apeek(stack, data)) {
 		return false;
 	}
 
-	*data = (stack->array)[stack->top];
 	(stack->array)[stack->top] = 0;
 	stack->top -= 1;
 	return true;
@@ -451,6 +442,7 @@ stk_apeek(struct stk_astack * stack, int * data) {
 		PRINT_ERR("Array is NULL.");
 		return false;
 	} else if ((stack->top < 0) || (stack->top+1 > (int)stack->max_size)) {
+		PRINT_ERR("Invalid index: %d.", stack->top);
 		return false;
 	}
 

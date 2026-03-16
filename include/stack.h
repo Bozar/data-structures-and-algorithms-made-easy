@@ -7,6 +7,9 @@
 #include <stdbool.h>
 
 #include "debug.h"
+
+
+#define INIT_STACK_SIZE 8
 // DEBUG {{{1
 
 #if DEBUG_STK
