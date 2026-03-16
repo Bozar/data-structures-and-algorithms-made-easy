@@ -12,6 +12,7 @@
 
 #define DEBUG_LLT 0
 #define DEBUG_STK 0
+#define DEBUG_QUE 1
 
 #endif
 // PRINT_MESSAGE {{{1
