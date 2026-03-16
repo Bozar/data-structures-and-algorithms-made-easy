@@ -16,7 +16,7 @@ NO_WARNING(-Wunused-function)
 
 // new(), is_empty(), size(), free()
 static bool zz_que_lnew(struct que_lqueue ** queue);
-//static bool zz_que_loperate(void);
+static bool zz_que_loperate(void);
 
 
 static bool
@@ -41,80 +41,82 @@ zz_que_lnew(struct que_lqueue ** queue) {
 }
 
 
-//static bool
-//zz_que_loperate(void) {
-//	struct que_lqueue * queue = NULL;
-//	bool is_ok = false;
-//	if (! que_lnew(&queue)) {
-//		PRINT_ERR("Failed: que_lnew()");
-//		goto CLEAN_UP;
-//	}
-//
-//	int data = -1;
-//	for (int i = 0; i < 9; i++) {
-//		if (! que_lpush(queue, i)) {
-//			PRINT_ERR("Failed: que_lpush()");
-//			goto CLEAN_UP;
-//		} else if (que_lis_empty(queue)) {
-//			PRINT_ERR("Failed: que_lis_empty()");
-//			goto CLEAN_UP;
-//		} else if (que_lsize(queue) != i+1) {
-//			PRINT_ERR("Failed: que_lsize()");
-//			goto CLEAN_UP;
-//		}
-//		data = -1;
-//		if ((! que_lpeek(queue, &data)) || (data != i)) {
-//			PRINT_ERR("Failed: que_lpeek()");
-//			goto CLEAN_UP;
-//		}
-//	}
-//
-//	for (int i = 8; i > 0; i--) {
-//		data = -1;
-//		if ((! que_lpop(queue, &data)) || (data != i)) {
-//			PRINT_ERR("Failed: que_lpop()");
-//			goto CLEAN_UP;
-//		} else if (que_lis_empty(queue)) {
-//			PRINT_ERR("Failed: que_lis_empty()");
-//			goto CLEAN_UP;
-//		} else if (que_lsize(queue) != i) {
-//			PRINT_ERR("Failed: que_lsize()");
-//			goto CLEAN_UP;
-//		}
-//		data = -1;
-//		if ((! que_lpeek(queue, &data)) || (data != i-1)) {
-//			PRINT_ERR("Failed: que_lpeek()");
-//			goto CLEAN_UP;
-//		}
-//	}
-//	data = -1;
-//	if ((! que_lpop(queue, &data)) || (data != 0)) {
-//		PRINT_ERR("Failed: que_lpop()");
-//		goto CLEAN_UP;
-//	}
-//
-//	if (que_lpop(queue, &data)) {
-//		PRINT_ERR("Failed: que_lpop()");
-//		goto CLEAN_UP;
-//	} else if (! que_lis_empty(queue)) {
-//		PRINT_ERR("Failed: que_lis_empty()");
-//		goto CLEAN_UP;
-//	} else if (que_lsize(queue) != 0) {
-//		PRINT_ERR("Failed: que_lsize()");
-//		goto CLEAN_UP;
-//	} else if (que_lpeek(queue, &data)) {
-//		PRINT_ERR("Failed: que_lpeek()");
-//		goto CLEAN_UP;
-//	}
-//
-//	is_ok = true;
-//CLEAN_UP:
-//	que_lfree(&queue);
-//	if (is_ok) {
-//		PRINT_LOG("Passed.");
-//	}
-//	return is_ok;
-//}
+static bool
+zz_que_loperate(void) {
+	struct que_lqueue * queue = NULL;
+	bool is_ok = false;
+	if (! que_lnew(&queue)) {
+		PRINT_ERR("Failed: que_lnew()");
+		goto CLEAN_UP;
+	}
+
+	int data = -1;
+	const int front = 0;
+	const int rear = 8;
+	for (int i = front; i < rear+1; i++) {
+		if (! que_lenqueue(queue, i)) {
+			PRINT_ERR("Failed: que_lenqueue()");
+			goto CLEAN_UP;
+		} else if (que_lis_empty(queue)) {
+			PRINT_ERR("Failed: que_lis_empty()");
+			goto CLEAN_UP;
+		} else if (que_lsize(queue) != i+1) {
+			PRINT_ERR("Failed: que_lsize()");
+			goto CLEAN_UP;
+		}
+		data = -1;
+		if ((! que_lpeek(queue, &data)) || (data != front)) {
+			PRINT_ERR("Failed: que_lpeek()");
+			goto CLEAN_UP;
+		}
+	}
+
+	for (int i = rear; i > front; i--) {
+		data = -1;
+		if ((! que_ldequeue(queue, &data)) || (data != rear-i)) {
+			PRINT_ERR("Failed: que_ldequeue()");
+			goto CLEAN_UP;
+		} else if (que_lis_empty(queue)) {
+			PRINT_ERR("Failed: que_lis_empty()");
+			goto CLEAN_UP;
+		} else if (que_lsize(queue) != i) {
+			PRINT_ERR("Failed: que_lsize()");
+			goto CLEAN_UP;
+		}
+		data = -1;
+		if ((! que_lpeek(queue, &data)) || (data != rear-i+1)) {
+			PRINT_ERR("Failed: que_lpeek()");
+			goto CLEAN_UP;
+		}
+	}
+	data = -1;
+	if ((! que_ldequeue(queue, &data)) || (data != rear)) {
+		PRINT_ERR("Failed: que_ldequeue()");
+		goto CLEAN_UP;
+	}
+
+	if (que_ldequeue(queue, &data)) {
+		PRINT_ERR("Failed: que_ldequeue()");
+		goto CLEAN_UP;
+	} else if (! que_lis_empty(queue)) {
+		PRINT_ERR("Failed: que_lis_empty()");
+		goto CLEAN_UP;
+	} else if (que_lsize(queue) != 0) {
+		PRINT_ERR("Failed: que_lsize()");
+		goto CLEAN_UP;
+	} else if (que_lpeek(queue, &data)) {
+		PRINT_ERR("Failed: que_lpeek()");
+		goto CLEAN_UP;
+	}
+
+	is_ok = true;
+CLEAN_UP:
+	que_lfree(&queue);
+	if (is_ok) {
+		PRINT_LOG("Passed.");
+	}
+	return is_ok;
+}
 // ZZ_QUE_ARRAY {{{2
 
 // new(), is_empty(), size(), free()
@@ -155,8 +157,8 @@ zz_que_lnew(struct que_lqueue ** queue) {
 //
 //	int data = -1;
 //	for (int i = 0; i < 9; i++) {
-//		if (! que_apush(queue, i)) {
-//			PRINT_ERR("Failed: que_apush()");
+//		if (! que_aenqueue(queue, i)) {
+//			PRINT_ERR("Failed: que_aenqueue()");
 //			goto CLEAN_UP;
 //		} else if (que_ais_empty(queue)) {
 //			PRINT_ERR("Failed: que_ais_empty()");
@@ -174,8 +176,8 @@ zz_que_lnew(struct que_lqueue ** queue) {
 //
 //	for (int i = 8; i > 0; i--) {
 //		data = -1;
-//		if ((! que_apop(queue, &data)) || (data != i)) {
-//			PRINT_ERR("Failed: que_apop()");
+//		if ((! que_adequeue(queue, &data)) || (data != i)) {
+//			PRINT_ERR("Failed: que_adequeue()");
 //			goto CLEAN_UP;
 //		} else if (que_ais_empty(queue)) {
 //			PRINT_ERR("Failed: que_ais_empty()");
@@ -191,13 +193,13 @@ zz_que_lnew(struct que_lqueue ** queue) {
 //		}
 //	}
 //	data = -1;
-//	if ((! que_apop(queue, &data)) || (data != 0)) {
-//		PRINT_ERR("Failed: que_apop()");
+//	if ((! que_adequeue(queue, &data)) || (data != 0)) {
+//		PRINT_ERR("Failed: que_adequeue()");
 //		goto CLEAN_UP;
 //	}
 //
-//	if (que_apop(queue, &data)) {
-//		PRINT_ERR("Failed: que_apop()");
+//	if (que_adequeue(queue, &data)) {
+//		PRINT_ERR("Failed: que_adequeue()");
 //		goto CLEAN_UP;
 //	} else if (! que_ais_empty(queue)) {
 //		PRINT_ERR("Failed: que_ais_empty()");
@@ -226,9 +228,9 @@ que_test(void) {
 //	return zz_que_anew(&queue);
 //	return zz_que_aoperate();
 
-	struct que_lqueue * queue = NULL;
-	return zz_que_lnew(&queue);
-//	return zz_que_loperate();
+//	struct que_lqueue * queue = NULL;
+//	return zz_que_lnew(&queue);
+	return zz_que_loperate();
 }
 
 NO_WARNING_END
@@ -257,15 +259,11 @@ que_lis_empty(struct que_lqueue * queue) {
 	}
 
 	bool no_front = (queue->front == NULL);
-	bool no_rear = (queue->rear == NULL);
 	bool no_size = (queue->size == 0);
-	if (no_front && no_rear && no_size) {
+	if (no_front && no_size) {
 		return true;
-	} else if (no_front ^ no_rear ^ no_size) {
-		PRINT_ERR(
-				"No front: %d, no rear: %d, no size: %d",
-				no_front, no_rear, no_size
-		);
+	} else if (no_front ^ no_size) {
+		PRINT_ERR("No front: %d, no size: %d", no_front, no_size);
 	}
 	return false;
 }
@@ -300,52 +298,57 @@ que_lfree(struct que_lqueue ** queue) {
 }
 
 
-//bool
-//que_lpush(struct que_lqueue * queue, int data) {
-//	struct llt_snode * node = NULL;
-//	if (queue == NULL) {
-//		PRINT_ERR("Queue is null.");
-//		return false;
-//	} else if (! llt_snew(&node)) {
-//		return false;
-//	}
-//
-//	node->data = data;
-//	node->next = queue->top;
-//	queue->top = node;
-//	queue->size += 1;
-//	return true;
-//}
-//
-//
-//bool
-//que_lpop(struct que_lqueue * queue, int * data) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Queue is null.");
-//		return false;
-//	} else if (queue->top == NULL) {
-//		return false;
-//	}
-//
-//	*data = (queue->top)->data;
-//	queue->top = (queue->top)->next;
-//	queue->size -= 1;
-//	return true;
-//}
-//
-//
-//bool
-//que_lpeek(struct que_lqueue * queue, int * data) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Queue is null.");
-//		return false;
-//	} else if (queue->top == NULL) {
-//		return false;
-//	}
-//
-//	*data = (queue->top)->data;
-//	return true;
-//}
+bool
+que_lenqueue(struct que_lqueue * queue, int data) {
+	struct llt_snode * node = NULL;
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return false;
+	} else if (! llt_snew(&node)) {
+		return false;
+	}
+
+	node->data = data;
+	if (que_lis_empty(queue)) {
+		queue->front = node;
+		queue->rear = node;
+	} else {
+		(queue->rear)->next = node;
+		queue->rear = node;
+	}
+	queue->size += 1;
+	return true;
+}
+
+
+bool
+que_ldequeue(struct que_lqueue * queue, int * data) {
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return false;
+	} else if (queue->front == NULL) {
+		return false;
+	}
+
+	*data = (queue->front)->data;
+	queue->front = (queue->front)->next;
+	queue->size -= 1;
+	return true;
+}
+
+
+bool
+que_lpeek(struct que_lqueue * queue, int * data) {
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return false;
+	} else if (queue->front == NULL) {
+		return false;
+	}
+
+	*data = (queue->front)->data;
+	return true;
+}
 // ARRAY {{{1
 
 //bool
@@ -402,7 +405,7 @@ que_lfree(struct que_lqueue ** queue) {
 //
 //
 //bool
-//que_apush(struct que_aqueue * queue, int data) {
+//que_aenqueue(struct que_aqueue * queue, int data) {
 //	if (queue == NULL) {
 //		PRINT_ERR("Queue is null.");
 //		return false;
@@ -431,7 +434,7 @@ que_lfree(struct que_lqueue ** queue) {
 //
 //
 //bool
-//que_apop(struct que_aqueue * queue, int * data) {
+//que_adequeue(struct que_aqueue * queue, int * data) {
 //	if (queue == NULL) {
 //		PRINT_ERR("Queue is null.");
 //		return false;
