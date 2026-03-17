@@ -9,7 +9,7 @@
 #include "debug.h"
 
 
-#define INIT_SIZE 8
+#define INIT_QUEUE_SIZE 8
 // DEBUG {{{1
 
 #if DEBUG_QUE
@@ -36,7 +36,7 @@ void que_lfree(struct que_lqueue ** queue);
 
 struct que_aqueue {
 	int front;
-	int rear;
+	int size;
 	unsigned max_size;
 	int * array;
 };

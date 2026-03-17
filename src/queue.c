@@ -120,32 +120,32 @@ CLEAN_UP:
 // ZZ_QUE_ARRAY {{{2
 
 // new(), is_empty(), size(), free()
-//static bool zz_que_anew(struct que_aqueue ** queue);
+static bool zz_que_anew(struct que_aqueue ** queue);
 //static bool zz_que_aoperate(void);
-//
-//
-//static bool
-//zz_que_anew(struct que_aqueue ** queue) {
-//	if (! que_anew(queue)) {
-//		PRINT_ERR("Failed: que_anew()");
-//		assert(false);
-//	} else if (! que_ais_empty(*queue)) {
-//		PRINT_ERR("Failed: que_ais_empty()");
-//		assert(false);
-//	} else if (que_asize(*queue) != 0) {
-//		PRINT_ERR("Failed: que_asize()");
-//		assert(false);
-//	}
-//	que_afree(queue);
-//	if (*queue != NULL) {
-//		PRINT_ERR("Failed: que_afree()");
-//		assert(false);
-//	}
-//	PRINT_LOG("Passed.");
-//	return true;
-//}
-//
-//
+
+
+static bool
+zz_que_anew(struct que_aqueue ** queue) {
+	if (! que_anew(queue)) {
+		PRINT_ERR("Failed: que_anew()");
+		assert(false);
+	} else if (! que_ais_empty(*queue)) {
+		PRINT_ERR("Failed: que_ais_empty()");
+		assert(false);
+	} else if (que_asize(*queue) != 0) {
+		PRINT_ERR("Failed: que_asize()");
+		assert(false);
+	}
+	que_afree(queue);
+	if (*queue != NULL) {
+		PRINT_ERR("Failed: que_afree()");
+		assert(false);
+	}
+	PRINT_LOG("Passed.");
+	return true;
+}
+
+
 //static bool
 //zz_que_aoperate(void) {
 //	struct que_aqueue * queue = NULL;
@@ -224,13 +224,13 @@ CLEAN_UP:
 
 bool
 que_test(void) {
-//	struct que_aqueue * queue = NULL;
-//	return zz_que_anew(&queue);
+	struct que_aqueue * queue = NULL;
+	return zz_que_anew(&queue);
 //	return zz_que_aoperate();
 
 //	struct que_lqueue * queue = NULL;
 //	return zz_que_lnew(&queue);
-	return zz_que_loperate();
+//	return zz_que_loperate();
 }
 
 NO_WARNING_END
@@ -351,59 +351,68 @@ que_lpeek(struct que_lqueue * queue, int * data) {
 }
 // ARRAY {{{1
 
-//bool
-//que_anew(struct que_aqueue ** queue) {
-//	*queue = malloc(sizeof(struct que_aqueue));
-//	if (*queue == NULL) {
-//		PRINT_ERR("Memory error.");
-//		return false;
-//	}
-//	(*queue)->array = malloc(sizeof(int)*INIT_SIZE);
-//	if ((*queue)->array == NULL) {
-//		PRINT_ERR("Memory error.");
-//		return false;
-//	}
-//	(*queue)->top = -1;
-//	(*queue)->max_size = INIT_SIZE;
-//	return true;
-//}
-//
-//
-//bool
-//que_ais_empty(struct que_aqueue * queue) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Queue is null.");
-//		return false;
-//	}
-//	return queue->top < 0;
-//}
-//
-//
-//int
-//que_asize(struct que_aqueue * queue) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Queue is null.");
-//		return -1;
-//	}
-//	return (queue->top)+1;
-//}
-//
-//
-//void
-//que_afree(struct que_aqueue ** queue) {
-//	if (*queue == NULL) {
-//		return;
-//	}
-//
-//	if ((*queue)->array != NULL) {
-//		free((*queue)->array);
-//		(*queue)->array = NULL;
-//	}
-//	free(*queue);
-//	*queue = NULL;
-//}
-//
-//
+bool
+que_anew(struct que_aqueue ** queue) {
+	*queue = malloc(sizeof(struct que_aqueue));
+	if (*queue == NULL) {
+		PRINT_ERR("Memory error.");
+		return false;
+	}
+	(*queue)->array = malloc(sizeof(int)*INIT_QUEUE_SIZE);
+	if ((*queue)->array == NULL) {
+		PRINT_ERR("Memory error.");
+		return false;
+	}
+	(*queue)->front = -1;
+	(*queue)->size = 0;
+	(*queue)->max_size = INIT_QUEUE_SIZE;
+	return true;
+}
+
+
+bool
+que_ais_empty(struct que_aqueue * queue) {
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return false;
+	}
+
+	bool no_front = (queue->front < 0);
+	bool no_size = (queue->size == 0);
+	if (no_front && no_size) {
+		return true;
+	} else if (no_front ^ no_size) {
+		PRINT_ERR("No front: %d, no size: %d", no_front, no_size);
+	}
+	return false;
+}
+
+
+int
+que_asize(struct que_aqueue * queue) {
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return -1;
+	}
+	return queue->size;
+}
+
+
+void
+que_afree(struct que_aqueue ** queue) {
+	if (*queue == NULL) {
+		return;
+	}
+
+	if ((*queue)->array != NULL) {
+		free((*queue)->array);
+		(*queue)->array = NULL;
+	}
+	free(*queue);
+	*queue = NULL;
+}
+
+
 //bool
 //que_aenqueue(struct que_aqueue * queue, int data) {
 //	if (queue == NULL) {
