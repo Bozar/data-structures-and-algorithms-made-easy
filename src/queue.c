@@ -6,6 +6,9 @@
 
 #include "queue.h"
 #include "linked_list.h"
+
+
+static bool resize_array(struct que_aqueue * queue);
 // DEBUG {{{1
 // MARCO {{{2
 
@@ -121,7 +124,7 @@ CLEAN_UP:
 
 // new(), is_empty(), size(), free()
 static bool zz_que_anew(struct que_aqueue ** queue);
-//static bool zz_que_aoperate(void);
+static bool zz_que_aoperate(void);
 
 
 static bool
@@ -146,87 +149,177 @@ zz_que_anew(struct que_aqueue ** queue) {
 }
 
 
-//static bool
-//zz_que_aoperate(void) {
-//	struct que_aqueue * queue = NULL;
-//	bool is_ok = false;
-//	if (! que_anew(&queue)) {
-//		PRINT_ERR("Failed: que_anew()");
-//		goto CLEAN_UP;
-//	}
-//
-//	int data = -1;
-//	for (int i = 0; i < 9; i++) {
-//		if (! que_aenqueue(queue, i)) {
-//			PRINT_ERR("Failed: que_aenqueue()");
-//			goto CLEAN_UP;
-//		} else if (que_ais_empty(queue)) {
-//			PRINT_ERR("Failed: que_ais_empty()");
-//			goto CLEAN_UP;
-//		} else if (que_asize(queue) != i+1) {
-//			PRINT_ERR("Failed: que_asize()");
-//			goto CLEAN_UP;
-//		}
-//		data = -1;
-//		if ((! que_apeek(queue, &data)) || (data != i)) {
-//			PRINT_ERR("Failed: que_apeek()");
-//			goto CLEAN_UP;
-//		}
-//	}
-//
-//	for (int i = 8; i > 0; i--) {
-//		data = -1;
-//		if ((! que_adequeue(queue, &data)) || (data != i)) {
-//			PRINT_ERR("Failed: que_adequeue()");
-//			goto CLEAN_UP;
-//		} else if (que_ais_empty(queue)) {
-//			PRINT_ERR("Failed: que_ais_empty()");
-//			goto CLEAN_UP;
-//		} else if (que_asize(queue) != i) {
-//			PRINT_ERR("Failed: que_asize()");
-//			goto CLEAN_UP;
-//		}
-//		data = -1;
-//		if ((! que_apeek(queue, &data)) || (data != i-1)) {
-//			PRINT_ERR("Failed: que_apeek()");
-//			goto CLEAN_UP;
-//		}
-//	}
-//	data = -1;
-//	if ((! que_adequeue(queue, &data)) || (data != 0)) {
-//		PRINT_ERR("Failed: que_adequeue()");
-//		goto CLEAN_UP;
-//	}
-//
-//	if (que_adequeue(queue, &data)) {
-//		PRINT_ERR("Failed: que_adequeue()");
-//		goto CLEAN_UP;
-//	} else if (! que_ais_empty(queue)) {
-//		PRINT_ERR("Failed: que_ais_empty()");
-//		goto CLEAN_UP;
-//	} else if (que_asize(queue) != 0) {
-//		PRINT_ERR("Failed: que_asize()");
-//		goto CLEAN_UP;
-//	} else if (que_apeek(queue, &data)) {
-//		PRINT_ERR("Failed: que_apeek()");
-//		goto CLEAN_UP;
-//	}
-//
-//	is_ok = true;
-//CLEAN_UP:
-//	que_afree(&queue);
-//	if (is_ok) {
-//		PRINT_LOG("Passed.");
-//	}
-//	return is_ok;
-//}
+static bool
+zz_que_aoperate(void) {
+	struct que_aqueue * queue = NULL;
+	bool is_ok = false;
+	if (! que_anew(&queue)) {
+		PRINT_ERR("Failed: que_anew()");
+		goto CLEAN_UP;
+	}
+
+	// Enqueue 3 elements.
+	const int front = 0;
+	int size = 3;
+	int data = -1;
+	for (int i = front; i < size; i++) {
+		if (! que_aenqueue(queue, i)) {
+			PRINT_ERR("Failed: que_aenqueue()");
+			goto CLEAN_UP;
+		} else if (que_ais_empty(queue)) {
+			PRINT_ERR("Failed: que_ais_empty()");
+			goto CLEAN_UP;
+		} else if (que_asize(queue) != i+1) {
+			PRINT_ERR("Failed: que_asize()");
+			goto CLEAN_UP;
+		}
+		data = -1;
+		if ((! que_apeek(queue, &data)) || (data != front)) {
+			PRINT_ERR("Failed: que_apeek()");
+			goto CLEAN_UP;
+		}
+	}
+
+	// Dequeue 3 elements.
+	size = 3;
+	for (int i = front; ; i++) {
+		size -= 1;
+		data = -1;
+		if ((! que_adequeue(queue, &data)) || (data != i)) {
+			PRINT_ERR("Failed: que_adequeue()");
+			goto CLEAN_UP;
+		} else if ((size > 0) && que_ais_empty(queue)) {
+			PRINT_ERR("Failed: que_ais_empty()");
+			goto CLEAN_UP;
+		} else if (que_asize(queue) != size) {
+			PRINT_ERR("Failed: que_asize()");
+			goto CLEAN_UP;
+		}
+		if (size == 0) {
+			break;
+		}
+		data = -1;
+		if ((! que_apeek(queue, &data)) || (data != i+1)) {
+			PRINT_ERR("Failed: que_apeek()");
+			goto CLEAN_UP;
+		}
+	}
+
+	// Enqueue 8 elements.
+	size = 8;
+	data = -1;
+	for (int i = front; i < size; i++) {
+		if (! que_aenqueue(queue, i)) {
+			PRINT_ERR("Failed: que_aenqueue()");
+			goto CLEAN_UP;
+		} else if (que_ais_empty(queue)) {
+			PRINT_ERR("Failed: que_ais_empty()");
+			goto CLEAN_UP;
+		} else if (que_asize(queue) != i+1) {
+			PRINT_ERR("Failed: que_asize()");
+			goto CLEAN_UP;
+		}
+		data = -1;
+		if ((! que_apeek(queue, &data)) || (data != front)) {
+			PRINT_ERR("Failed: que_apeek()");
+			goto CLEAN_UP;
+		}
+	}
+
+	int arr8[] = {
+		5, 6, 7, 0,
+		1, 2, 3, 4,
+	};
+	for (int i = 0; i < size; i++) {
+		if (arr8[i] != (queue->array)[i]) {
+			PRINT_ERR(
+					"Arr8[%d]: %d->%d",
+					i, arr8[i], (queue->array)[i]
+			);
+			goto CLEAN_UP;
+		}
+	}
+
+	// Enqueue 2 more elements.
+	int start = 8;
+	size = 10;
+	data = -1;
+	for (int i = start; i < size; i++) {
+		if (! que_aenqueue(queue, i)) {
+			PRINT_ERR("Failed: que_aenqueue()");
+			goto CLEAN_UP;
+		} else if (que_ais_empty(queue)) {
+			PRINT_ERR("Failed: que_ais_empty()");
+			goto CLEAN_UP;
+		} else if (que_asize(queue) != i+1) {
+			PRINT_ERR("Failed: que_asize()");
+			goto CLEAN_UP;
+		}
+		data = -1;
+		if ((! que_apeek(queue, &data)) || (data != front)) {
+			PRINT_ERR("Failed: que_apeek()");
+			goto CLEAN_UP;
+		}
+	}
+
+
+	int arr16[] = {
+		0, 0, 0, 0,
+		1, 2, 3, 4,
+		5, 6, 7, 8,
+		9, 0, 0, 0,
+	};
+	size = 16;
+	for (int i = 0; i < size; i++) {
+		if (arr16[i] != (queue->array)[i]) {
+			PRINT_ERR(
+					"Arr16[%d]: %d->%d",
+					i, arr16[i], (queue->array)[i]
+			);
+			goto CLEAN_UP;
+		}
+	}
+
+	// Dequeue 10 elements.
+	size = 10;
+	for (int i = front; ! que_ais_empty(queue); i++) {
+		size -= 1;
+		data = -1;
+		if ((! que_adequeue(queue, &data)) || (data != i)) {
+			PRINT_ERR("Failed: que_adequeue()");
+			goto CLEAN_UP;
+		} else if ((size > 0) && que_ais_empty(queue)) {
+			PRINT_ERR("Failed: que_ais_empty()");
+			goto CLEAN_UP;
+		} else if (que_asize(queue) != size) {
+			PRINT_ERR("Failed: que_asize()");
+			goto CLEAN_UP;
+		}
+		if (size == 0) {
+			break;
+		}
+		data = -1;
+		if ((! que_apeek(queue, &data)) || (data != i+1)) {
+			PRINT_ERR("Failed: que_apeek()");
+			goto CLEAN_UP;
+		}
+	}
+
+	is_ok = true;
+CLEAN_UP:
+	que_afree(&queue);
+	if (is_ok) {
+		PRINT_LOG("Passed.");
+	}
+	return is_ok;
+}
 // QUE_TEST {{{2
 
 bool
 que_test(void) {
-	struct que_aqueue * queue = NULL;
-	return zz_que_anew(&queue);
-//	return zz_que_aoperate();
+//	struct que_aqueue * queue = NULL;
+//	return zz_que_anew(&queue);
+	return zz_que_aoperate();
 
 //	struct que_lqueue * queue = NULL;
 //	return zz_que_lnew(&queue);
@@ -363,7 +456,7 @@ que_anew(struct que_aqueue ** queue) {
 		PRINT_ERR("Memory error.");
 		return false;
 	}
-	(*queue)->front = -1;
+	(*queue)->front = 0;
 	(*queue)->size = 0;
 	(*queue)->max_size = INIT_QUEUE_SIZE;
 	return true;
@@ -376,15 +469,7 @@ que_ais_empty(struct que_aqueue * queue) {
 		PRINT_ERR("Queue is null.");
 		return false;
 	}
-
-	bool no_front = (queue->front < 0);
-	bool no_size = (queue->size == 0);
-	if (no_front && no_size) {
-		return true;
-	} else if (no_front ^ no_size) {
-		PRINT_ERR("No front: %d, no size: %d", no_front, no_size);
-	}
-	return false;
+	return queue->size < 1;
 }
 
 
@@ -413,66 +498,83 @@ que_afree(struct que_aqueue ** queue) {
 }
 
 
-//bool
-//que_aenqueue(struct que_aqueue * queue, int data) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Queue is null.");
-//		return false;
-//	}
-//
-//	int * new_array = NULL;
-//	if ((queue->top)+1 >= (int)queue->max_size) {
-//		new_array = realloc(
-//				queue->array, sizeof(int)*(queue->max_size)*2
-//		);
-//		if (new_array == NULL) {
-//			PRINT_ERR("Memory error.");
-//			return false;
-//		}
-//		queue->max_size *= 2;
-//		queue->array = new_array;
-//	} else if (queue->array == NULL) {
-//		PRINT_ERR("Array is NULL.");
-//		return false;
-//	}
-//
-//	queue->top += 1;
-//	(queue->array)[queue->top] = data;
-//	return true;
-//}
-//
-//
-//bool
-//que_adequeue(struct que_aqueue * queue, int * data) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Queue is null.");
-//		return false;
-//	} else if (queue->array == NULL) {
-//		PRINT_ERR("Array is NULL.");
-//		return false;
-//	} else if (queue->top < 0) {
-//		return false;
-//	}
-//
-//	*data = (queue->array)[queue->top];
-//	(queue->array)[queue->top] = 0;
-//	queue->top -= 1;
-//	return true;
-//}
-//
-//
-//bool
-//que_apeek(struct que_aqueue * queue, int * data) {
-//	if (queue == NULL) {
-//		PRINT_ERR("Queue is null.");
-//		return false;
-//	} else if (queue->array == NULL) {
-//		PRINT_ERR("Array is NULL.");
-//		return false;
-//	} else if ((queue->top < 0) || (queue->top+1 > (int)queue->max_size)) {
-//		return false;
-//	}
-//
-//	*data = (queue->array)[queue->top];
-//	return true;
-//}
+bool
+que_aenqueue(struct que_aqueue * queue, int data) {
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return false;
+	} else if (queue->array == NULL) {
+		PRINT_ERR("Array is NULL.");
+		return false;
+	} else if (! resize_array(queue)) {
+		return false;
+	}
+
+	int rear = ((queue->front)+(queue->size)) % (int)(queue->max_size);
+	(queue->array)[rear] = data;
+	queue->size += 1;
+	return true;
+}
+
+
+bool
+que_adequeue(struct que_aqueue * queue, int * data) {
+	if (! que_apeek(queue, data)) {
+		return false;
+	}
+
+	(queue->array)[queue->front] = 0;
+	queue->front = ((queue->front)+1) % (int)(queue->max_size);
+	queue->size -= 1;
+	return true;
+}
+
+
+bool
+que_apeek(struct que_aqueue * queue, int * data) {
+	if (queue == NULL) {
+		PRINT_ERR("Queue is null.");
+		return false;
+	} else if (queue->array == NULL) {
+		PRINT_ERR("Array is NULL.");
+		return false;
+	} else if (
+			(queue->front < 0)
+			|| (queue->front+1 > (int)queue->max_size)
+	) {
+		PRINT_ERR("Invalid index: %d.", queue->front);
+		return false;
+	}
+
+	*data = (queue->array)[queue->front];
+	return true;
+}
+
+
+static bool
+resize_array(struct que_aqueue * queue) {
+	if ((queue->size) < (int)queue->max_size) {
+		return true;
+	}
+
+	int prev_max_size = (int)queue->max_size;
+	int * new_array = realloc(
+			queue->array, sizeof(int)*(queue->max_size)*2
+	);
+	if (new_array == NULL) {
+		PRINT_ERR("Memory error.");
+		return false;
+	}
+
+	queue->max_size *= 2;
+	queue->array = new_array;
+	if (queue->front == 0) {
+		return true;
+	}
+
+	for (int i = 0; i < queue->front; i++) {
+		(queue->array)[i+prev_max_size] = (queue->array)[i];
+		(queue->array)[i] = 0;
+	}
+	return true;
+}
