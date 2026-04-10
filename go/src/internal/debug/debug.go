@@ -2,6 +2,6 @@ package debug
 
 import ()
 
-const IsDebugSlist bool = true
-const IsDebugDlist bool = false
+const IsDebugSlist bool = false
+const IsDebugDlist bool = true
 const IsDebugClist bool = false
