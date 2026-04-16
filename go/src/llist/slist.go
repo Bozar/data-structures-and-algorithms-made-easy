@@ -9,53 +9,51 @@ type Snode struct {
 	Next *Snode
 }
 
-func Sprint(head Snode) {
+func (sn *Snode) Print() {
 	for i := 0; ; i++ {
-		fmt.Printf("%d: %d\n", i, head.Data)
-		if head.Next == nil {
+		fmt.Printf("%d: %d\n", i, sn.Data)
+		if sn.Next == nil {
 			break
 		}
-		head = *head.Next
+		sn = sn.Next
 	}
 }
 
-func Sinsert(head *Snode, index int, data int) *Snode {
+func (sn *Snode) Insert(index int, data int) *Snode {
 	node := new(Snode)
 	node.Data = data
 
-	if head == nil {
-		head = node
-		return head
+	if sn == nil {
+		sn = node
+		return sn
+	} else if index < 0 {
+		node.Next = sn
+		sn = node
+		return sn
 	}
 
-	if index < 0 {
-		node.Next = head
-		head = node
-		return head
-	}
-
-	prev, _ := getSnode(head, index)
+	prev, _ := getSnode(sn, index)
 	node.Next = prev.Next
 	prev.Next = node
-	return head
+	return sn
 }
 
-func Sdelete(head *Snode, index int) *Snode {
-	if head == nil {
-		return head
+func (sn *Snode) Delete(index int) *Snode {
+	if sn == nil {
+		return sn
 	}
 
 	if index < 1 {
-		head = head.Next
-		return head
+		sn = sn.Next
+		return sn
 	}
 
-	del, prev := getSnode(head, index)
+	del, prev := getSnode(sn, index)
 	if (prev == nil) || (del == nil) {
 		return nil
 	}
 	prev.Next = del.Next
-	return head
+	return sn
 }
 
 func getSnode(head *Snode, index int) (this *Snode, prev *Snode) {

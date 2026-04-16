@@ -9,66 +9,66 @@ type Cnode struct {
 	Next *Cnode
 }
 
-func Cprint(head Cnode) {
-	start := head
+func (cn *Cnode) Print() {
+	start := cn
 	for i := 0; ; i++ {
-		fmt.Printf("%d: %d\n", i, head.Data)
-		if head.Next == nil {
+		fmt.Printf("%d: %d\n", i, cn.Data)
+		if cn.Next == nil {
 			fmt.Printf("Cnode.Next is null: %d\n", i)
 			return
-		} else if *head.Next == start {
+		} else if cn.Next == start {
 			break
 		}
-		head = *head.Next
+		cn = cn.Next
 	}
 }
 
-func Cinsert(head *Cnode, index int, data int) *Cnode {
+func (cn *Cnode) Insert(index int, data int) *Cnode {
 	node := new(Cnode)
 	node.Data = data
 
-	if head == nil {
-		head = node
-		head.Next = head
-		return head
+	if cn == nil {
+		cn = node
+		cn.Next = cn
+		return cn
 	}
 
-	prev := getLastCnode(head)
+	prev := getLastCnode(cn)
 	if index < 0 {
-		node.Next = head
+		node.Next = cn
 		prev.Next = node
-		head = node
-		return head
+		cn = node
+		return cn
 	}
 
-	prev, _ = getCnode(head, index)
+	prev, _ = getCnode(cn, index)
 	node.Next = prev.Next
 	prev.Next = node
-	return head
+	return cn
 }
 
-func Cdelete(head *Cnode, index int) *Cnode {
-	if head == nil {
-		return head
+func (cn *Cnode) Delete(index int) *Cnode {
+	if cn == nil {
+		return cn
 	}
 
 	var prev *Cnode
 	if index < 1 {
-		if head.Next == head {
+		if cn.Next == cn {
 			return nil
 		}
-		prev = getLastCnode(head)
-		prev.Next = head.Next
-		head = head.Next
-		return head
+		prev = getLastCnode(cn)
+		prev.Next = cn.Next
+		cn = cn.Next
+		return cn
 	}
 
-	del, prev := getCnode(head, index)
+	del, prev := getCnode(cn, index)
 	if (prev == nil) || (del == nil) {
 		return nil
 	}
 	prev.Next = del.Next
-	return head
+	return cn
 }
 
 func getLastCnode(head *Cnode) *Cnode {

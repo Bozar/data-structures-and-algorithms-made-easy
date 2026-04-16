@@ -10,40 +10,40 @@ type Dnode struct {
 	Prev *Dnode
 }
 
-func Dprint(head Dnode) {
+func (dn *Dnode) Print() {
 	for i := 0; ; i++ {
-		if head.Prev == nil {
-			fmt.Printf("%d: %d <- NULL\n", i, head.Data)
+		if dn.Prev == nil {
+			fmt.Printf("%d: %d <- NULL\n", i, dn.Data)
 		} else {
 			fmt.Printf(
 				"%d: %d <- %d\n",
-				i, head.Data, (head.Prev).Data,
+				i, dn.Data, (dn.Prev).Data,
 			)
 		}
-		if head.Next == nil {
+		if dn.Next == nil {
 			break
 		}
-		head = *head.Next
+		dn = dn.Next
 	}
 }
 
-func Dinsert(head *Dnode, index int, data int) *Dnode {
+func (dn *Dnode) Insert(index int, data int) *Dnode {
 	node := new(Dnode)
 	node.Data = data
 
-	if head == nil {
-		head = node
-		return head
+	if dn == nil {
+		dn = node
+		return dn
 	}
 
 	if index < 0 {
-		node.Next = head
-		head.Prev = node
-		head = node
-		return head
+		node.Next = dn
+		dn.Prev = node
+		dn = node
+		return dn
 	}
 
-	prev, _ := getDnode(head, index)
+	prev, _ := getDnode(dn, index)
 	next := prev.Next
 
 	node.Next = next
@@ -52,23 +52,23 @@ func Dinsert(head *Dnode, index int, data int) *Dnode {
 	if next != nil {
 		next.Prev = node
 	}
-	return head
+	return dn
 }
 
-func Ddelete(head *Dnode, index int) *Dnode {
-	if head == nil {
-		return head
+func (dn *Dnode) Delete(index int) *Dnode {
+	if dn == nil {
+		return dn
 	}
 
 	if index < 1 {
-		head = head.Next
-		if head != nil {
-			head.Prev = nil
+		dn = dn.Next
+		if dn != nil {
+			dn.Prev = nil
 		}
-		return head
+		return dn
 	}
 
-	del, prev := getDnode(head, index)
+	del, prev := getDnode(dn, index)
 	if (prev == nil) || (del == nil) {
 		return nil
 	}
@@ -77,7 +77,7 @@ func Ddelete(head *Dnode, index int) *Dnode {
 	if next != nil {
 		next.Prev = prev
 	}
-	return head
+	return dn
 }
 
 func getDnode(head *Dnode, index int) (this *Dnode, prev *Dnode) {

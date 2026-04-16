@@ -8,15 +8,13 @@ import (
 )
 
 func TestClist(t *testing.T) {
-	fmt.Println("Cprint()")
+	fmt.Println("testCprint()")
 	testCprint(t)
 
-	fmt.Println()
-	fmt.Println("Cinsert()")
+	fmt.Println("testCinsert()")
 	testCinsert(t)
 
-	fmt.Println()
-	fmt.Println("Cdelete()")
+	fmt.Println("testCdelete()")
 	testCdelete(t)
 }
 
@@ -34,7 +32,7 @@ func testCprint(t *testing.T) {
 	n2.Next = &n3
 	n3.Next = &n1
 
-	llist.Cprint(n1)
+	n1.Print()
 }
 
 func testCinsert(t *testing.T) {
@@ -43,9 +41,9 @@ func testCinsert(t *testing.T) {
 	// Step 1: [2,]
 	index := 9
 	data := 2
-	head = llist.Cinsert(head, index, data)
+	head = head.Insert(index, data)
 	fmt.Println("step 1: [2,]")
-	llist.Cprint(*head)
+	head.Print()
 	if !verifyClist(t, head, []int{2}) {
 		return
 	}
@@ -53,15 +51,15 @@ func testCinsert(t *testing.T) {
 	// Step 2: [2, 3, 4, 5,]
 	index = 0
 	data = 3
-	head = llist.Cinsert(head, index, data)
+	head = head.Insert(index, data)
 	index = 9
 	data = 5
-	head = llist.Cinsert(head, index, data)
+	head = head.Insert(index, data)
 	index = 1
 	data = 4
-	head = llist.Cinsert(head, index, data)
+	head = head.Insert(index, data)
 	fmt.Println("step 2: [2, 3, 4, 5,]")
-	llist.Cprint(*head)
+	head.Print()
 	if !verifyClist(t, head, []int{2, 3, 4, 5}) {
 		return
 	}
@@ -69,9 +67,9 @@ func testCinsert(t *testing.T) {
 	// Step 3: [1, 2, 3, 4, 5,]
 	index = -9
 	data = 1
-	head = llist.Cinsert(head, index, data)
+	head = head.Insert(index, data)
 	fmt.Println("step 3: [1, 2, 3, 4, 5,]")
-	llist.Cprint(*head)
+	head.Print()
 	if !verifyClist(t, head, []int{1, 2, 3, 4, 5}) {
 		return
 	}
@@ -82,74 +80,73 @@ func testCdelete(t *testing.T) {
 	var head *llist.Cnode
 	index := 7
 	for i := 1; i < index; i++ {
-		head = llist.Cinsert(head, 99, i)
+		head = head.Insert(99, i)
 	}
-	fmt.Printf("\nllist.Cdelete()")
 	fmt.Printf("\nstep 0: [1, 2, 3, 4, 5, 6,]\n")
-	llist.Cprint(*head)
+	head.Print()
 
 	// Step 1: [1, 2, 3, 4, 5,]
 	index = 99
-	head = llist.Cdelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 1: [1, 2, 3, 4, 5,]\n")
-	llist.Cprint(*head)
+	head.Print()
 	if !verifyClist(t, head, []int{1, 2, 3, 4, 5}) {
 		return
 	}
 
 	// Step 2: [1, 2, 3, 4,]
 	index = 4
-	head = llist.Cdelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 2: [1, 2, 3, 4,]\n")
-	llist.Cprint(*head)
+	head.Print()
 	if !verifyClist(t, head, []int{1, 2, 3, 4}) {
 		return
 	}
 
 	// Step 3: [1, 2, 4,]
 	index = 2
-	head = llist.Cdelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 3: [1, 2, 4,]\n")
-	llist.Cprint(*head)
+	head.Print()
 	if !verifyClist(t, head, []int{1, 2, 4}) {
 		return
 	}
 
 	// Step 4: [2, 4,]
 	index = -1
-	head = llist.Cdelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 4: [2, 4,]\n")
-	llist.Cprint(*head)
+	head.Print()
 	if !verifyClist(t, head, []int{2, 4}) {
 		return
 	}
 
 	// Step 5: [4,]
 	index = 0
-	head = llist.Cdelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 5: [4,]\n")
-	llist.Cprint(*head)
+	head.Print()
 	if !verifyClist(t, head, []int{4}) {
 		return
 	}
 
 	// Step 6: [,]
 	index = 0
-	head = llist.Cdelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 6: [,]\n")
 	if head != nil {
-		llist.Cprint(*head)
+		head.Print()
 		t.Error("head is not null")
 		return
 	}
 
 	// Step 7: [4,] -> [,]
 	index = 9
-	head = llist.Cinsert(head, index, 4)
-	head = llist.Cdelete(head, index)
+	head = head.Insert(index, 4)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 7: [,]\n")
 	if head != nil {
-		llist.Cprint(*head)
+		head.Print()
 		t.Error("head is not null")
 		return
 	}

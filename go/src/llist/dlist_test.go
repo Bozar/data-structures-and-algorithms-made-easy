@@ -8,15 +8,13 @@ import (
 )
 
 func TestDlist(t *testing.T) {
-	fmt.Println("Dprint()")
+	fmt.Println("testDprint()")
 	testDprint(t)
 
-	fmt.Println()
-	fmt.Println("Dinsert()")
+	fmt.Println("testDinsert()")
 	testDinsert(t)
 
-	fmt.Println()
-	fmt.Println("Ddelete()")
+	fmt.Println("testDdelete()")
 	testDdelete(t)
 }
 
@@ -35,7 +33,7 @@ func testDprint(t *testing.T) {
 	n2.Prev = &n1
 	n3.Prev = &n2
 
-	llist.Dprint(n1)
+	n1.Print()
 }
 
 func testDinsert(t *testing.T) {
@@ -44,9 +42,9 @@ func testDinsert(t *testing.T) {
 	// Step 1: [2,]
 	index := 9
 	data := 2
-	head = llist.Dinsert(head, index, data)
+	head = head.Insert(index, data)
 	fmt.Println("step 1: [2,]")
-	llist.Dprint(*head)
+	head.Print()
 	if !verifyDlist(t, head, []int{2}) {
 		return
 	}
@@ -54,15 +52,15 @@ func testDinsert(t *testing.T) {
 	// Step 2: [2, 3, 4, 5,]
 	index = 0
 	data = 3
-	head = llist.Dinsert(head, index, data)
+	head = head.Insert(index, data)
 	index = 9
 	data = 5
-	head = llist.Dinsert(head, index, data)
+	head = head.Insert(index, data)
 	index = 1
 	data = 4
-	head = llist.Dinsert(head, index, data)
+	head = head.Insert(index, data)
 	fmt.Println("step 2: [2, 3, 4, 5,]")
-	llist.Dprint(*head)
+	head.Print()
 	if !verifyDlist(t, head, []int{2, 3, 4, 5}) {
 		return
 	}
@@ -70,9 +68,9 @@ func testDinsert(t *testing.T) {
 	// Step 3: [1, 2, 3, 4, 5,]
 	index = -9
 	data = 1
-	head = llist.Dinsert(head, index, data)
+	head = head.Insert(index, data)
 	fmt.Println("step 3: [1, 2, 3, 4, 5,]")
-	llist.Dprint(*head)
+	head.Print()
 	if !verifyDlist(t, head, []int{1, 2, 3, 4, 5}) {
 		return
 	}
@@ -83,53 +81,52 @@ func testDdelete(t *testing.T) {
 	var head *llist.Dnode
 	index := 7
 	for i := 1; i < index; i++ {
-		head = llist.Dinsert(head, 99, i)
+		head = head.Insert(99, i)
 	}
-	fmt.Printf("\nllist.Ddelete()")
 	fmt.Printf("\nstep 0: [1, 2, 3, 4, 5, 6,]\n")
-	llist.Dprint(*head)
+	head.Print()
 
 	// Step 1: [1, 2, 3, 4, 5,]
 	index = 99
-	head = llist.Ddelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 1: [1, 2, 3, 4, 5,]\n")
-	llist.Dprint(*head)
+	head.Print()
 	if !verifyDlist(t, head, []int{1, 2, 3, 4, 5}) {
 		return
 	}
 
 	// Step 2: [1, 2, 3, 4,]
 	index = 4
-	head = llist.Ddelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 2: [1, 2, 3, 4,]\n")
-	llist.Dprint(*head)
+	head.Print()
 	if !verifyDlist(t, head, []int{1, 2, 3, 4}) {
 		return
 	}
 
 	// Step 3: [1, 2, 4,]
 	index = 2
-	head = llist.Ddelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 3: [1, 2, 4,]\n")
-	llist.Dprint(*head)
+	head.Print()
 	if !verifyDlist(t, head, []int{1, 2, 4}) {
 		return
 	}
 
 	// Step 4: [2, 4,]
 	index = -1
-	head = llist.Ddelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 4: [2, 4,]\n")
-	llist.Dprint(*head)
+	head.Print()
 	if !verifyDlist(t, head, []int{2, 4}) {
 		return
 	}
 
 	// Step 5: [4,]
 	index = 0
-	head = llist.Ddelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 5: [4,]\n")
-	llist.Dprint(*head)
+	head.Print()
 
 	if !verifyDlist(t, head, []int{4}) {
 		return
@@ -137,21 +134,21 @@ func testDdelete(t *testing.T) {
 
 	// Step 6: [,]
 	index = 0
-	head = llist.Ddelete(head, index)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 6: [,]\n")
 	if head != nil {
-		llist.Dprint(*head)
+		head.Print()
 		t.Error("head is not null")
 		return
 	}
 
 	// Step 7: [4,] -> [,]
 	index = 9
-	head = llist.Dinsert(head, index, 4)
-	head = llist.Ddelete(head, index)
+	head = head.Insert(index, 4)
+	head = head.Delete(index)
 	fmt.Printf("\nstep 7: [,]\n")
 	if head != nil {
-		llist.Dprint(*head)
+		head.Print()
 		t.Error("head is not null")
 		return
 	}
