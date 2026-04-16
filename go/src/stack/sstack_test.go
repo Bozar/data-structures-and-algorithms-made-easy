@@ -4,15 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/internal/debug"
 	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/stack"
 )
 
 func TestSstack(t *testing.T) {
-	if !debug.IsDebugSstack {
-		t.SkipNow()
-	}
-
 	fmt.Println("testSnew()")
 	testSnew(t)
 

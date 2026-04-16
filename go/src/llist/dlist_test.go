@@ -4,15 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/internal/debug"
 	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/llist"
 )
 
 func TestDlist(t *testing.T) {
-	if !debug.IsDebugDlist {
-		t.SkipNow()
-	}
-
 	fmt.Println("Dprint()")
 	testDprint(t)
 

@@ -4,15 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/internal/debug"
 	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/llist"
 )
 
 func TestClist(t *testing.T) {
-	if !debug.IsDebugClist {
-		t.SkipNow()
-	}
-
 	fmt.Println("Cprint()")
 	testCprint(t)
 

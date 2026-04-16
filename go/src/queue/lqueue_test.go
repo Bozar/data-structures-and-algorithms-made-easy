@@ -4,15 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/internal/debug"
 	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/queue"
 )
 
 func TestLqueue(t *testing.T) {
-	if !debug.IsDebugLqueue {
-		t.SkipNow()
-	}
-
 	fmt.Println("testLnew()")
 	testLnew(t)
 

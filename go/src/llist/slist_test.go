@@ -4,15 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/internal/debug"
 	"github.com/Bozar/data-structures-and-algorithms-made-easy/go/src/llist"
 )
 
 func TestSlist(t *testing.T) {
-	if !debug.IsDebugSlist {
-		t.SkipNow()
-	}
-
 	testSprint(t)
 	testSinsert(t)
 	testSdelete(t)
