@@ -2,9 +2,12 @@ package debug
 
 import ()
 
-const IsDebugSlist bool = false
-const IsDebugDlist bool = false
-const IsDebugClist bool = false
+const IsDebugSlist bool = true
+const IsDebugDlist bool = true
+const IsDebugClist bool = true
 
-const IsDebugLstack bool = false
-const IsDebugSstack bool = false
+const IsDebugLstack bool = true
+const IsDebugSstack bool = true
+
+const IsDebugLqueue bool = true
+const IsDebugSqueue bool = true
