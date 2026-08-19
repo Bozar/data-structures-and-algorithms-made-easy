@@ -2,7 +2,7 @@
 f ?=
 
 # Package directory name
-d ?= array/easy/repeatMiss
+d ?= array/easy/repeat1n1
 
 MOD_NAME := github.com/Bozar/data-structures-and-algorithms/geeks
 
