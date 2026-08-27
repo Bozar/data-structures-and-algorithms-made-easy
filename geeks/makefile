@@ -2,7 +2,7 @@
 f ?=
 
 # Package directory name
-d ?= array/easy/equilibrium
+d ?= array/easy/split3
 
 MOD_NAME := github.com/Bozar/data-structures-and-algorithms/geeks
 
