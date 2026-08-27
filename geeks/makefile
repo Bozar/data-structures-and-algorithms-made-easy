@@ -2,7 +2,7 @@
 f ?=
 
 # Package directory name
-d ?= array/easy/maxSubSum
+d ?= array/easy/equilibrium
 
 MOD_NAME := github.com/Bozar/data-structures-and-algorithms/geeks
 
