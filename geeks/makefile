@@ -2,7 +2,7 @@
 f ?=
 
 # Package directory name
-d ?= array/easy/sorted3
+d ?= array/easy/maxSubSum
 
 MOD_NAME := github.com/Bozar/data-structures-and-algorithms/geeks
 
@@ -32,8 +32,11 @@ ARG_WIN := GOOS=windows GOARCH=amd64
 CMD_LS_HIDDEN := printf "_: " && ls --color -p $(DIR_HIDDEN)
 CMD_LS_SRC := printf "src: " && ls --color -p $(DIR_SRC)
 
+TEST_BEGIN := --- FAIL:
+TEST_END := FAIL
+
 .PHONY: all fmt vet test linux win tag \
-		init npack nfile run clean show hide unhide
+	init npack nfile run clean show hide unhide
 
 all: fmt vet test linux tag run
 
@@ -49,7 +52,7 @@ vet:
 	go-staticcheck $(PATH_SRC)
 
 test:
-	go test $(PATH_SRC)
+	go test $(PATH_SRC) | sed -n '/$(TEST_BEGIN)/,/$(TEST_END)/p'
 
 tag:
 	mkdir -p $(DIR_TAGS)
