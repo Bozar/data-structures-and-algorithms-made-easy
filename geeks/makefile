@@ -2,7 +2,7 @@
 f ?=
 
 # Package directory name
-d ?= array/easy/split3
+d ?= hash/easy/subset
 
 MOD_NAME := github.com/Bozar/data-structures-and-algorithms/geeks
 
