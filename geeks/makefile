@@ -2,7 +2,7 @@
 f ?=
 
 # Package directory name
-d ?= hash/easy/disjoint
+d ?= hash/easy/equal
 
 MOD_NAME := github.com/Bozar/data-structures-and-algorithms/geeks
 
