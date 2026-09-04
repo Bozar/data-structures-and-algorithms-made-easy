@@ -2,7 +2,7 @@
 f ?=
 
 # Package directory name
-d ?= hash/easy/union
+d ?= hash/easy/frequent
 
 MOD_NAME := github.com/Bozar/data-structures-and-algorithms/geeks
 
